@@ -7,7 +7,8 @@ export const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 export const CANVAS_WIDTH = (canvas.width = 1024);
 export const CANVAS_HEIGHT = (canvas.height = 500);
 
-const dog = new Dog('starting game');
+const dog = new Dog();
+dog.action = 'hunted duck';
 dog.declaringActionForPositions();
 
 function gameLoop() {
