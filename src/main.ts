@@ -8,7 +8,7 @@ export const CANVAS_WIDTH = (canvas.width = 1024);
 export const CANVAS_HEIGHT = (canvas.height = 500);
 
 const dog = new Dog();
-dog.action = 'hunted duck';
+dog.action = 'starting game';
 dog.declaringActionForPositions();
 
 function gameLoop() {

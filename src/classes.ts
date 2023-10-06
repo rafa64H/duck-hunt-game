@@ -40,6 +40,14 @@ export class Dog {
   }
 
   declaringActionForPositions(): void {
+    if (this.action === '') {
+      this.x = -100;
+      this.y = -100;
+      this.speedX = 0;
+      this.speedY = 0;
+      this.spriteWidth = 0;
+      this.spriteHeight = 0;
+    }
     if (this.action === 'starting game') {
       this.x = 0;
       this.y = CANVAS_HEIGHT - this.height;
@@ -124,6 +132,7 @@ export class Dog {
         ctx.fillRect(0, CANVAS_HEIGHT - 50, CANVAS_WIDTH, 50);
       }
     }
+
     if (this.action === 'hunted duck') {
       ctx.drawImage(
         GAME_SPRITES,
