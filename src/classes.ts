@@ -54,11 +54,12 @@ export class Dog {
       this.spriteWidth = 60;
       this.spriteHeight = 54;
     }
-    if (this.action === 'hunted duck') {
+    if (this.action === 'hunted duck' || this.action === 'flew away duck') {
       this.x = CANVAS_WIDTH * 0.5;
       this.y = CANVAS_HEIGHT - this.height;
       this.spriteWidth = 62.5;
       this.spriteHeight = 54;
+      console.log('hola');
     }
   }
 
@@ -104,6 +105,19 @@ export class Dog {
         }
         this.counterAnimation++;
       }
+
+      if (this.action === 'flew away duck') {
+        this.spriteFrameX === 4 ? (this.spriteFrameX = 3) : this.spriteFrameX++;
+        this.spriteFrameY = 1;
+        this.speedY = -15;
+        if (this.y <= CANVAS_HEIGHT - 165 && this.counterAnimation < 10) {
+          this.speedY = 0;
+        }
+        if (this.counterAnimation >= 10) {
+          this.speedY = 15;
+        }
+        this.counterAnimation++;
+      }
       this.x += this.speedX;
       this.y += this.speedY;
     }
@@ -133,7 +147,7 @@ export class Dog {
       }
     }
 
-    if (this.action === 'hunted duck') {
+    if (this.action === 'hunted duck' || this.action === 'flew away duck') {
       ctx.drawImage(
         GAME_SPRITES,
         this.spriteWidth * this.spriteFrameX,
@@ -150,5 +164,17 @@ export class Dog {
       ctx.fillStyle = 'green';
       ctx.fillRect(0, CANVAS_HEIGHT - 50, CANVAS_WIDTH, 50);
     }
+  }
+}
+
+export class Duck {
+  constructor(
+    public color: string,
+    public speedX: number,
+    public speedY: number
+  ) {
+    this.speedX = speedX;
+    this.speedY = speedY;
+    this.color = color;
   }
 }
