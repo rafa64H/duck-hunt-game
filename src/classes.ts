@@ -191,13 +191,15 @@ export class Duck {
     this.y = 0;
     this.width = 100;
     this.height = 94;
+    this.color = color;
     this.spriteWidth = 0;
     this.spriteHeight = 0;
-    this.spriteFrameX = 0;
+    this.spriteFrameX =
+      this.color === 'blue' ? 0 : this.color === 'black' ? 3 : 6;
+
     this.spriteFrameY = 0;
     this.speedX = 10;
     this.speedY = 10;
-    this.color = color;
     this.animationSpeed = 4;
     this.frames = 0;
     this.counterAnimation = 0;
@@ -206,8 +208,14 @@ export class Duck {
   declaringPositions(): void {
     this.x = CANVAS_WIDTH * 0.5;
     this.y = CANVAS_HEIGHT - 300;
-    this.spriteWidth = 38;
-    this.spriteHeight = 40;
+    if (this.color === 'blue') {
+      this.spriteWidth = 38;
+      this.spriteHeight = 40;
+    }
+    if (this.color === 'black' || this.color === 'red') {
+      this.spriteWidth = 42;
+      this.spriteHeight = 40;
+    }
   }
 
   changeLookingDirection(): void {
@@ -241,13 +249,20 @@ export class Duck {
       this.speedY = -Math.abs(this.speedY);
     }
 
+    if (this.counterAnimation === 500) {
+      this.changeLookingDirection();
+      this.counterAnimation = 0;
+    }
+
     if (this.frames % this.animationSpeed === 0) {
       if (this.color === 'blue') {
         this.spriteFrameX <= 1 ? this.spriteFrameX++ : (this.spriteFrameX = 0);
       }
-      if (this.counterAnimation === 500) {
-        this.changeLookingDirection();
-        this.counterAnimation = 0;
+      if (this.color === 'black') {
+        this.spriteFrameX <= 4 ? this.spriteFrameX++ : (this.spriteFrameX = 3);
+      }
+      if (this.color === 'red') {
+        this.spriteFrameX <= 7 ? this.spriteFrameX++ : (this.spriteFrameX = 6);
       }
     }
     this.x += this.speedX;

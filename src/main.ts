@@ -7,11 +7,14 @@ export const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 export const CANVAS_WIDTH = (canvas.width = 1024);
 export const CANVAS_HEIGHT = (canvas.height = 500);
 
+export const POSIBLE_DUCK_COLORS = ['blue', 'black', 'red'];
+export const levelsLeft = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
 const dog = new Dog();
 dog.action = 'starting game';
 dog.declaringPositions();
 
-const duck = new Duck('blue', 1);
+const duck = new Duck('red', 1);
 duck.declaringPositions();
 
 function gameLoop() {
