@@ -8,11 +8,14 @@
 }
 
 body {
+}
+
+.center-canvas {
   display: flex;
   justify-content: center;
   align-items: center;
 
-  height: 100vh;
+  margin-top: 2em;
 }
 
 #game-canvas {

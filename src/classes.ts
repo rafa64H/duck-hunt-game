@@ -43,7 +43,7 @@ export class Dog {
   }
 
   declaringPositions(): void {
-    if (this.action === '') {
+    if (this.action === 'idle') {
       this.x = -100;
       this.y = -100;
       this.speedX = 0;
@@ -62,7 +62,6 @@ export class Dog {
       this.y = CANVAS_HEIGHT - this.height;
       this.spriteWidth = 62.5;
       this.spriteHeight = 54;
-      console.log('hola');
     }
   }
 
@@ -86,6 +85,9 @@ export class Dog {
               if (this.counterAnimation >= 45) {
                 this.speedY = 20;
                 this.spriteFrameX++;
+                if (this.y > CANVAS_HEIGHT) {
+                  this.action = 'idle';
+                }
               }
             }
           }
