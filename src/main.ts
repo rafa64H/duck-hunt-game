@@ -1,4 +1,4 @@
-import { Dog } from './classes';
+import { Dog, Duck } from './classes';
 
 const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
 
@@ -9,7 +9,10 @@ export const CANVAS_HEIGHT = (canvas.height = 500);
 
 const dog = new Dog();
 dog.action = 'starting game';
-dog.declaringActionForPositions();
+dog.declaringPositions();
+
+const duck = new Duck('blue', 1);
+duck.declaringPositions();
 
 function gameLoop() {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -18,6 +21,9 @@ function gameLoop() {
 
   dog.update();
   dog.draw();
+
+  duck.update();
+  duck.draw();
   requestAnimationFrame(gameLoop);
 }
 
