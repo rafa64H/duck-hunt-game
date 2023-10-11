@@ -1,3 +1,7 @@
+:root {
+  --font: '8BIT WONDER', sans-serif;
+}
+
 *,
 *::before,
 *::after {
@@ -7,17 +11,100 @@
   box-sizing: border-box;
 }
 
-body {
+i {
+  display: inline-block;
+
+  padding: 0.7rem;
+  background-size: 100% 100%;
+}
+[data-empty-bullets='true'] {
+  display: none;
 }
 
-.center-canvas {
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: brown;
+  width: min(100%, 1024px);
+  margin-top: -0.54em;
+  padding: 0.5em 1em;
+
+  font-family: var(--font);
+  color: rgb(79, 221, 79);
+}
+
+.level-and-shots {
+}
+.level {
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 0.5em;
+}
+.shots {
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 0.5em;
+}
+.shots-bullet-icons {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.shot-bullet-i {
+  padding: 0.7rem;
+  background-image: url(bullet-icon.png);
+  background-size: 100% 100%;
+}
+.shots__p {
+  text-align: center;
+}
 
-  margin-top: 2em;
+.ducks-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 0.5em;
+}
+.ducks-info__hit {
+  margin-right: 2em;
+}
+.ducks-info__bars {
+  display: flex;
+  flex-direction: column;
+}
+.duck-icons {
+}
+.duck-i-alive {
+  background-image: url(duck-icon-alive.png);
+}
+.duck-i-hunted {
+  background-image: url(duck-icon-hunted.png);
+}
+.required-ducks {
+  margin-top: 0.3em;
+  padding: 0.4rem 0;
+  background-color: darkcyan;
+  width: 40%;
+}
+
+.score {
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 0.5em;
+}
+.score-number {
+}
+.score-text {
 }
 
 #game-canvas {
-  border: 2px solid black;
 }

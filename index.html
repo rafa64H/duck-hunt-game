@@ -3,13 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://fonts.cdnfonts.com/css/8bit-wonder" rel="stylesheet" />
+
     <title>Duck hunt game</title>
     <script type="module" src="/src/main.ts" defer></script>
     <link rel="stylesheet" href="src/assets/styles.css" />
   </head>
   <body>
-    <div class="center-canvas">
-      <canvas id="game-canvas"></canvas>
+    <canvas id="game-canvas"></canvas>
+    <div class="game-info">
+      <div class="level-and-shots">
+        <section class="level">R=1</section>
+        <section class="shots">
+          <div class="shots-bullet-icons">
+            <i data-empty-bullets="true"></i>
+            <i class="shot-bullet-i"></i>
+            <i class="shot-bullet-i"></i>
+            <i class="shot-bullet-i"></i>
+          </div>
+          <p class="shots__p">SHOT</p>
+        </section>
+      </div>
+      <section class="ducks-info">
+        <div class="ducks-info__hit">
+          <p>HIT</p>
+        </div>
+        <div class="ducks-info__bars">
+          <div class="duck-icons" data-duck-icons>
+            <i class="duck-i-alive"></i>
+            <i class="duck-i-alive"></i>
+            <i class="duck-i-alive"></i>
+            <i class="duck-i-alive"></i>
+            <i class="duck-i-alive"></i>
+            <i class="duck-i-alive"></i>
+            <i class="duck-i-alive"></i>
+            <i class="duck-i-alive"></i>
+            <i class="duck-i-alive"></i>
+            <i class="duck-i-alive"></i>
+          </div>
+          <div class="required-ducks" data-required-ducks-bar></div>
+        </div>
+      </section>
+      <section class="score">
+        <div class="score-number" data-score>000000</div>
+        <p class="score-text">SCORE</p>
+      </section>
     </div>
     <button id="start-game-btn">Start game</button>
   </body>
