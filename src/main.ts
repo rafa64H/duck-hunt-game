@@ -102,15 +102,6 @@ function gameLoop() {
   dog.update();
   dog.draw();
 
-  console.log(
-    dog.x,
-    dog.y,
-    dog.spriteWidth,
-    dog.spriteHeight,
-    dog.speedX,
-    dog.speedY
-  );
-
   globalVariables.ducksToShow.forEach((duck) => {
     duck.update();
     duck.draw();

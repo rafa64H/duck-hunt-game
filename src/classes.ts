@@ -243,10 +243,14 @@ export class Duck {
   }
 
   declaringPositions(): void {
-    const randomX = Math.round(Math.random() * 10);
-    const randomY = Math.round(Math.random() * 10);
-    this.x = randomX >= 5 ? CANVAS_WIDTH - this.width : 0 + this.width;
-    this.y = randomY >= 5 ? CANVAS_HEIGHT - 150 : 0 + this.height;
+    const randomX = Math.round(
+      Math.random() * CANVAS_WIDTH - this.width - 0 + this.width
+    );
+    const randomY = Math.round(
+      Math.random() * (CANVAS_HEIGHT - 150) - 0 + this.height
+    );
+    this.x = randomX;
+    this.y = randomY;
     if (this.color === 'blue') {
       this.spriteWidth = 38;
       this.spriteHeight = 40;
@@ -268,6 +272,7 @@ export class Duck {
     } else {
       this.speedX = -Math.abs(this.speedXOnLevel);
     }
+
     if (negativeOrPositiveY) {
       this.speedY = Math.abs(this.speedYOnLevel);
     } else {
@@ -305,7 +310,8 @@ export class Duck {
     if (this.action === 'flying') {
       this.counterAnimation++;
       if (this.frames % this.animationSpeed === 0) {
-        if (this.counterAnimation === 300) {
+        console.log(this.counterAnimation);
+        if (this.counterAnimation >= 70) {
           this.changeDirection();
           this.counterAnimation = 0;
         }
@@ -335,7 +341,7 @@ export class Duck {
       this.speedY = 0;
       this.counterAnimation++;
 
-      if (this.counterAnimation >= 200) {
+      if (this.counterAnimation >= 100) {
         this.speedY = 10;
         this.spriteFrameX =
           this.color === 'blue' ? 1 : this.color === 'black' ? 4 : 7;
