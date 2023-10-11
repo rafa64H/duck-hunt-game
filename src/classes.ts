@@ -1,8 +1,10 @@
 import {
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
+  collisionInstance,
   createShowDucks,
   ctx,
+  dog,
   globalVariables,
 } from './main';
 
@@ -27,7 +29,12 @@ export class Dog {
   public animationSpeed: number;
   public frames;
   public counterAnimation: number;
-  public action: string;
+  public action:
+    | ''
+    | 'idle'
+    | 'starting game'
+    | 'hunted duck'
+    | 'flew away duck';
 
   constructor() {
     this.action = '';
@@ -50,6 +57,7 @@ export class Dog {
 
   declaringPositions(): void {
     if (this.action === 'idle') {
+      this.counterAnimation = 0;
       this.x = -100;
       this.y = -100;
       this.speedX = 0;
@@ -58,14 +66,20 @@ export class Dog {
       this.spriteHeight = 0;
     }
     if (this.action === 'starting game') {
+      this.counterAnimation = 0;
       this.x = 0;
       this.y = CANVAS_HEIGHT - this.height;
+      this.speedX = 0;
+      this.speedY = 0;
       this.spriteWidth = 60;
       this.spriteHeight = 54;
     }
     if (this.action === 'hunted duck' || this.action === 'flew away duck') {
+      this.counterAnimation = 0;
       this.x = CANVAS_WIDTH * 0.5;
       this.y = CANVAS_HEIGHT - this.height;
+      this.speedX = 0;
+      this.speedY = 0;
       this.spriteWidth = 62.5;
       this.spriteHeight = 54;
     }
@@ -93,6 +107,7 @@ export class Dog {
                 this.spriteFrameX++;
                 if (this.y > CANVAS_HEIGHT) {
                   this.action = 'idle';
+                  this.declaringPositions();
                   createShowDucks();
                 }
               }
@@ -114,6 +129,11 @@ export class Dog {
         }
         if (this.counterAnimation >= 10) {
           this.speedY = 15;
+          if (this.y > CANVAS_HEIGHT) {
+            this.action = 'idle';
+            this.declaringPositions();
+            createShowDucks();
+          }
         }
         this.counterAnimation++;
       }
@@ -180,6 +200,8 @@ export class Dog {
 }
 
 export class Duck {
+  public action: 'flying' | 'dying';
+  public removeCollisionDetecion: boolean;
   public x: number;
   public y: number;
   public width: number;
@@ -198,6 +220,8 @@ export class Duck {
 
   constructor(public color: string, public level: number) {
     this.level = level;
+    this.action = 'flying';
+    this.removeCollisionDetecion = false;
     this.x = 0;
     this.y = 0;
     this.width = 100;
@@ -257,27 +281,74 @@ export class Duck {
     }
   }
 
+  delete(): void {
+    const indexOfThis = globalVariables.ducksToShow.indexOf(this);
+    globalVariables.ducksToShow.splice(indexOfThis, 1);
+
+    const notHuntedDuckIcons = globalVariables.duckIcons.filter((duckIcon) => {
+      const huntedDuckAttribute = duckIcon.getAttribute('data-hunted');
+      return huntedDuckAttribute !== 'true';
+    });
+
+    notHuntedDuckIcons[0].setAttribute('data-hunted', 'true');
+
+    console.log(globalVariables.duckIcons);
+    if (globalVariables.ducksToShow.length === 0) {
+      dog.action = 'hunted duck';
+      console.log(dog.x, dog.y, dog.width, dog.height);
+      dog.declaringPositions();
+      console.log(dog.x, dog.y, dog.width, dog.height);
+    }
+  }
+
   update(): void {
-    if (this.counterAnimation === 300) {
-      this.changeDirection();
-      this.counterAnimation = 0;
+    if (this.action === 'flying') {
+      this.counterAnimation++;
+      if (this.frames % this.animationSpeed === 0) {
+        if (this.counterAnimation === 300) {
+          this.changeDirection();
+          this.counterAnimation = 0;
+        }
+
+        if (this.color === 'blue') {
+          this.spriteFrameX <= 1
+            ? this.spriteFrameX++
+            : (this.spriteFrameX = 0);
+        }
+        if (this.color === 'black') {
+          this.spriteFrameX <= 4
+            ? this.spriteFrameX++
+            : (this.spriteFrameX = 3);
+        }
+        if (this.color === 'red') {
+          this.spriteFrameX <= 7
+            ? this.spriteFrameX++
+            : (this.spriteFrameX = 6);
+        }
+      }
+    }
+    if (this.action === 'dying') {
+      this.spriteFrameX =
+        this.color === 'blue' ? 0 : this.color === 'black' ? 3 : 6;
+      this.spriteFrameY = 3;
+      this.speedX = 0;
+      this.speedY = 0;
+      this.counterAnimation++;
+
+      if (this.counterAnimation >= 200) {
+        this.speedY = 10;
+        this.spriteFrameX =
+          this.color === 'blue' ? 1 : this.color === 'black' ? 4 : 7;
+
+        if (this.y >= CANVAS_HEIGHT) {
+          this.delete();
+        }
+      }
     }
 
-    if (this.frames % this.animationSpeed === 0) {
-      if (this.color === 'blue') {
-        this.spriteFrameX <= 1 ? this.spriteFrameX++ : (this.spriteFrameX = 0);
-      }
-      if (this.color === 'black') {
-        this.spriteFrameX <= 4 ? this.spriteFrameX++ : (this.spriteFrameX = 3);
-      }
-      if (this.color === 'red') {
-        this.spriteFrameX <= 7 ? this.spriteFrameX++ : (this.spriteFrameX = 6);
-      }
-    }
     this.x += this.speedX;
     this.y += this.speedY;
     this.frames++;
-    this.counterAnimation++;
   }
 
   draw(): void {
@@ -292,6 +363,24 @@ export class Duck {
       this.width,
       this.height
     );
+
+    if (this.action === 'dying') {
+      ctx.drawImage(
+        GAME_SPRITES_DUCKS,
+        this.spriteWidth * this.spriteFrameX,
+        this.spriteHeight * this.spriteFrameY,
+        this.spriteWidth,
+        this.spriteHeight,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+      ctx.fillStyle = 'lightgreen';
+      ctx.fillRect(0, CANVAS_HEIGHT - 100, CANVAS_WIDTH, 100);
+      ctx.fillStyle = 'green';
+      ctx.fillRect(0, CANVAS_HEIGHT - 50, CANVAS_WIDTH, 50);
+    }
   }
 }
 
@@ -316,7 +405,8 @@ export class Shoot {
     globalVariables.shootArr.splice(indexOfThis, 1);
   }
 
-  update() {
+  update(): void {
+    collisionInstance.collisionShoot(this);
     if (this.counterAnimation === 10) {
       this.delete();
     }
@@ -324,20 +414,21 @@ export class Shoot {
     this.frames++;
   }
 
-  draw() {
+  draw(): void {
     ctx.fillStyle = 'white';
     ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 }
 
 export class Collision {
-  collisionDucks() {
+  collisionDucks(): void {
     globalVariables.ducksToShow.forEach((duck) => {
       const borderTop = 0;
       const borderRight = CANVAS_WIDTH - duck.width;
       const borderBottom = CANVAS_HEIGHT - duck.height - 100;
       const borderLeft = 0;
 
+      if (duck.removeCollisionDetecion) return;
       if (duck.x <= borderLeft) {
         duck.x = borderLeft;
         duck.speedX = Math.abs(duck.speedX);
@@ -353,6 +444,23 @@ export class Collision {
       if (duck.y >= borderBottom) {
         duck.y = borderBottom;
         duck.speedY = -Math.abs(duck.speedY);
+      }
+    });
+  }
+
+  collisionShoot(shoot: Shoot): void {
+    globalVariables.ducksToShow.forEach((duck) => {
+      if (
+        shoot.x > duck.x + duck.width ||
+        shoot.x + shoot.width < duck.x ||
+        shoot.y > duck.y + duck.height ||
+        shoot.y + shoot.height < duck.y
+      ) {
+        //No collision
+      } else {
+        duck.counterAnimation = 0;
+        duck.action = 'dying';
+        duck.removeCollisionDetecion = true;
       }
     });
   }

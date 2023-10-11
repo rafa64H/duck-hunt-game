@@ -62,8 +62,10 @@ i {
 }
 .shot-bullet-i {
   padding: 0.7rem;
-  background-image: url(bullet-icon.png);
   background-size: 100% 100%;
+}
+[data-spent='false'] {
+  background-image: url(bullet-icon.png);
 }
 .shots__p {
   text-align: center;
@@ -88,10 +90,10 @@ i {
 }
 .duck-icons {
 }
-.duck-i-alive {
+[data-hunted='false'] {
   background-image: url(duck-icon-alive.png);
 }
-.duck-i-hunted {
+[data-hunted='true'] {
   background-image: url(duck-icon-hunted.png);
 }
 .required-ducks {

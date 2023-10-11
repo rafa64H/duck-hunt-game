@@ -32,7 +32,7 @@ export const requiredDucksBar = document.querySelector(
 ) as HTMLElement;
 
 export const globalVariables = {
-  currentLevel: 1 as number,
+  currentLevel: 5 as number,
   duckIcons: [...duckIconsElements.children] as HTMLElement[],
   bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
   currentScore: 0 as number,
@@ -72,15 +72,15 @@ function drawBackground(): void {
 }
 drawBackground();
 
+export const dog = new Dog();
+dog.action = 'starting game';
+dog.declaringPositions();
+
 function startGame() {
   const displayGameInfo = document.querySelector(
     '[data-display-game-info]'
   ) as HTMLParagraphElement;
   displayGameInfo.setAttribute('data-display-game-info', 'true');
-
-  const dog = new Dog();
-  dog.action = 'starting game';
-  dog.declaringPositions();
 
   for (let i = 0; i < 10; i++) {
     const numberForColor = Math.round(Math.random() * 2);
@@ -91,16 +91,25 @@ function startGame() {
     globalVariables.ducksInTheLevel.push(newDuck);
   }
 
-  gameLoop(dog);
+  gameLoop();
 }
 
-function gameLoop(dog: Dog) {
+function gameLoop() {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   drawBackground();
 
   dog.update();
   dog.draw();
+
+  console.log(
+    dog.x,
+    dog.y,
+    dog.spriteWidth,
+    dog.spriteHeight,
+    dog.speedX,
+    dog.speedY
+  );
 
   globalVariables.ducksToShow.forEach((duck) => {
     duck.update();
@@ -114,7 +123,7 @@ function gameLoop(dog: Dog) {
 
   collisionInstance.collisionDucks();
 
-  requestAnimationFrame(() => gameLoop(dog));
+  requestAnimationFrame(() => gameLoop());
 }
 
 const buttonStartGame = document.querySelector(
@@ -127,7 +136,14 @@ buttonStartGame.addEventListener('click', (e) => {
 });
 
 canvas.addEventListener('click', (e: MouseEvent) => {
-  const shoot = new Shoot(e.x, e.y);
+  const shoot = new Shoot(e.offsetX, e.offsetY);
 
   globalVariables.shootArr.push(shoot);
+
+  const unspentBullets = globalVariables.bulletIcons.filter((bulletIcon) => {
+    const spent = bulletIcon.getAttribute('data-spent');
+    return spent !== 'true';
+  });
+
+  unspentBullets[unspentBullets.length - 1].setAttribute('data-spent', 'true');
 });
