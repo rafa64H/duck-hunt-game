@@ -10,11 +10,21 @@ export const CANVAS_HEIGHT = (canvas.height = 500);
 export const POSIBLE_DUCK_COLORS = ['blue', 'black', 'red'];
 
 export const globalVariables = {
+  currentLevel: 5 as number,
   levelsLeft: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as number[],
   ducksInTheLevel: [] as Duck[],
   ducksToShow: [] as Duck[],
 };
 
+export function createShowDucks() {
+  if (globalVariables.currentLevel >= 5) {
+    globalVariables.ducksToShow = globalVariables.ducksInTheLevel.splice(0, 2);
+    globalVariables.ducksToShow.forEach((duck) => duck.declaringPositions());
+  } else {
+    globalVariables.ducksToShow = globalVariables.ducksInTheLevel.splice(0, 1);
+    globalVariables.ducksToShow.forEach((duck) => duck.declaringPositions());
+  }
+}
 function drawBackground(): void {
   ctx.fillStyle = 'lightblue';
   ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -40,7 +50,9 @@ function startGame() {
     const numberForColor = Math.round(Math.random() * 2);
     const colorNewDuck = POSIBLE_DUCK_COLORS[numberForColor];
 
-    globalVariables.ducksInTheLevel.push(new Duck(colorNewDuck, 1));
+    const newDuck = new Duck(colorNewDuck, 1);
+    newDuck.declaringPositions();
+    globalVariables.ducksInTheLevel.push(newDuck);
   }
 
   gameLoop(dog);
@@ -53,6 +65,11 @@ function gameLoop(dog: Dog) {
 
   dog.update();
   dog.draw();
+
+  globalVariables.ducksToShow.forEach((duck) => {
+    duck.update();
+    duck.draw();
+  });
 
   requestAnimationFrame(() => gameLoop(dog));
 }

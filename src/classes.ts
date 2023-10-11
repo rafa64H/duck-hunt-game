@@ -1,4 +1,4 @@
-import { CANVAS_HEIGHT, CANVAS_WIDTH, ctx } from './main';
+import { CANVAS_HEIGHT, CANVAS_WIDTH, createShowDucks, ctx } from './main';
 
 const GAME_SPRITES_DOG = new Image();
 
@@ -87,6 +87,7 @@ export class Dog {
                 this.spriteFrameX++;
                 if (this.y > CANVAS_HEIGHT) {
                   this.action = 'idle';
+                  createShowDucks();
                 }
               }
             }
@@ -181,6 +182,8 @@ export class Duck {
   public spriteHeight: number;
   public spriteFrameX: number;
   public spriteFrameY: number;
+  public speedXOnLevel: number;
+  public speedYOnLevel: number;
   public speedX: number;
   public speedY: number;
   public animationSpeed: number;
@@ -200,6 +203,8 @@ export class Duck {
       this.color === 'blue' ? 0 : this.color === 'black' ? 3 : 6;
 
     this.spriteFrameY = 0;
+    this.speedXOnLevel = 10;
+    this.speedYOnLevel = 10;
     this.speedX = 10;
     this.speedY = 10;
     this.animationSpeed = 4;
@@ -208,8 +213,10 @@ export class Duck {
   }
 
   declaringPositions(): void {
-    this.x = CANVAS_WIDTH * 0.5;
-    this.y = CANVAS_HEIGHT - 300;
+    const randomX = Math.round(Math.random() * 10);
+    const randomY = Math.round(Math.random() * 10);
+    this.x = randomX >= 5 ? CANVAS_WIDTH - this.width : 0 + this.width;
+    this.y = randomY >= 5 ? CANVAS_HEIGHT - 150 : 0 + this.height;
     if (this.color === 'blue') {
       this.spriteWidth = 38;
       this.spriteHeight = 40;
@@ -220,7 +227,23 @@ export class Duck {
     }
   }
 
-  changeLookingDirection(): void {
+  changeDirection(): void {
+    const negativeOrPositiveX =
+      Math.round(Math.random() * 10) >= 5 ? true : false;
+    const negativeOrPositiveY =
+      Math.round(Math.random() * 10) >= 5 ? true : false;
+
+    if (negativeOrPositiveX) {
+      this.speedX = Math.abs(this.speedXOnLevel);
+    } else {
+      this.speedX = -Math.abs(this.speedXOnLevel);
+    }
+    if (negativeOrPositiveY) {
+      this.speedY = Math.abs(this.speedYOnLevel);
+    } else {
+      this.speedY = -Math.abs(this.speedYOnLevel);
+    }
+
     if (this.spriteFrameY === 0) {
       this.spriteFrameY = 1;
     } else {
@@ -251,8 +274,8 @@ export class Duck {
       this.speedY = -Math.abs(this.speedY);
     }
 
-    if (this.counterAnimation === 500) {
-      this.changeLookingDirection();
+    if (this.counterAnimation === 70) {
+      this.changeDirection();
       this.counterAnimation = 0;
     }
 
