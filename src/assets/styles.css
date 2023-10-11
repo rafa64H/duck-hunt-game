@@ -21,18 +21,24 @@ i {
   display: none;
 }
 
+.background-game-info {
+  margin-top: -0.54em;
+  padding: 0.5em 1em;
+  width: min(100%, 1024px);
+  background-color: brown;
+}
+
 .game-info {
+  font-family: var(--font);
+  color: rgb(79, 221, 79);
+}
+[data-display-game-info='true'] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  background-color: brown;
-  width: min(100%, 1024px);
-  margin-top: -0.54em;
-  padding: 0.5em 1em;
-
-  font-family: var(--font);
-  color: rgb(79, 221, 79);
+}
+[data-display-game-info='false'] {
+  display: none;
 }
 
 .level-and-shots {
@@ -102,9 +108,8 @@ i {
   padding: 0.5em;
 }
 .score-number {
+  text-align: center;
 }
 .score-text {
-}
-
-#game-canvas {
+  text-align: center;
 }

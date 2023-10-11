@@ -1,7 +1,6 @@
 import { Collision, Dog, Duck, Shoot } from './classes';
 
 const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
-
 export const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
 export const CANVAS_WIDTH =
@@ -15,13 +14,36 @@ export const CANVAS_HEIGHT =
 
 export const POSIBLE_DUCK_COLORS = ['blue', 'black', 'red'];
 
+const duckIconsElements = document.querySelector(
+  '[data-duck-icons]'
+) as HTMLDivElement;
+
+const shotsBulletIcons = document.querySelector(
+  '[data-shots-bullet-icons]'
+) as HTMLDivElement;
+
+export const scoreElement = document.querySelector('[data-score]');
+
+export const levelElement = document.querySelector('[data-level-element]');
+console.log(levelElement);
+
+export const requiredDucksBar = document.querySelector(
+  '[data-required-ducks-bar]'
+) as HTMLElement;
+
 export const globalVariables = {
-  currentLevel: 5 as number,
+  currentLevel: 1 as number,
+  duckIcons: [...duckIconsElements.children] as HTMLElement[],
+  bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
+  currentScore: 0 as number,
   levelsLeft: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as number[],
   ducksInTheLevel: [] as Duck[],
   ducksToShow: [] as Duck[],
   shootArr: [] as Shoot[],
 };
+
+levelElement!.textContent = globalVariables.currentLevel.toString();
+scoreElement!.textContent = globalVariables.currentScore.toString();
 
 export const collisionInstance = new Collision();
 
@@ -51,6 +73,11 @@ function drawBackground(): void {
 drawBackground();
 
 function startGame() {
+  const displayGameInfo = document.querySelector(
+    '[data-display-game-info]'
+  ) as HTMLParagraphElement;
+  displayGameInfo.setAttribute('data-display-game-info', 'true');
+
   const dog = new Dog();
   dog.action = 'starting game';
   dog.declaringPositions();
@@ -59,7 +86,7 @@ function startGame() {
     const numberForColor = Math.round(Math.random() * 2);
     const colorNewDuck = POSIBLE_DUCK_COLORS[numberForColor];
 
-    const newDuck = new Duck(colorNewDuck, 1);
+    const newDuck = new Duck(colorNewDuck, globalVariables.currentLevel);
     newDuck.declaringPositions();
     globalVariables.ducksInTheLevel.push(newDuck);
   }

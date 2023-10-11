@@ -209,10 +209,10 @@ export class Duck {
       this.color === 'blue' ? 0 : this.color === 'black' ? 3 : 6;
 
     this.spriteFrameY = 0;
-    this.speedXOnLevel = 10;
-    this.speedYOnLevel = 10;
-    this.speedX = 10;
-    this.speedY = 10;
+    this.speedXOnLevel = level;
+    this.speedYOnLevel = level;
+    this.speedX = level;
+    this.speedY = level;
     this.animationSpeed = 4;
     this.frames = 0;
     this.counterAnimation = 0;
@@ -258,7 +258,7 @@ export class Duck {
   }
 
   update(): void {
-    if (this.counterAnimation === 70) {
+    if (this.counterAnimation === 300) {
       this.changeDirection();
       this.counterAnimation = 0;
     }
@@ -296,6 +296,8 @@ export class Duck {
 }
 
 export class Shoot {
+  public x: number;
+  public y: number;
   public width: number;
   public height: number;
   public frames: number;

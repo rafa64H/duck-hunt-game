@@ -12,44 +12,47 @@
   </head>
   <body>
     <canvas id="game-canvas"></canvas>
-    <div class="game-info">
-      <div class="level-and-shots">
-        <section class="level">R=1</section>
-        <section class="shots">
-          <div class="shots-bullet-icons">
-            <i data-empty-bullets="true"></i>
-            <i class="shot-bullet-i"></i>
-            <i class="shot-bullet-i"></i>
-            <i class="shot-bullet-i"></i>
+    <div class="background-game-info">
+      <div class="game-info" data-display-game-info="false">
+        <div class="level-and-shots">
+          <section class="level">R=<span data-level-element></span></section>
+          <section class="shots">
+            <div class="shots-bullet-icons" data-shots-bullet-icons>
+              <i data-empty-bullets="true"></i>
+              <i class="shot-bullet-i"></i>
+              <i class="shot-bullet-i"></i>
+              <i class="shot-bullet-i"></i>
+            </div>
+            <p class="shots__p">SHOT</p>
+          </section>
+        </div>
+        <section class="ducks-info">
+          <div class="ducks-info__hit">
+            <p>HIT</p>
           </div>
-          <p class="shots__p">SHOT</p>
+          <div class="ducks-info__bars">
+            <div class="duck-icons" data-duck-icons>
+              <i class="duck-i-alive"></i>
+              <i class="duck-i-alive"></i>
+              <i class="duck-i-alive"></i>
+              <i class="duck-i-alive"></i>
+              <i class="duck-i-alive"></i>
+              <i class="duck-i-alive"></i>
+              <i class="duck-i-alive"></i>
+              <i class="duck-i-alive"></i>
+              <i class="duck-i-alive"></i>
+              <i class="duck-i-alive"></i>
+            </div>
+            <div class="required-ducks" data-required-ducks-bar></div>
+          </div>
+        </section>
+        <section class="score">
+          <p class="score-number" data-score></p>
+          <p class="score-text">SCORE</p>
         </section>
       </div>
-      <section class="ducks-info">
-        <div class="ducks-info__hit">
-          <p>HIT</p>
-        </div>
-        <div class="ducks-info__bars">
-          <div class="duck-icons" data-duck-icons>
-            <i class="duck-i-alive"></i>
-            <i class="duck-i-alive"></i>
-            <i class="duck-i-alive"></i>
-            <i class="duck-i-alive"></i>
-            <i class="duck-i-alive"></i>
-            <i class="duck-i-alive"></i>
-            <i class="duck-i-alive"></i>
-            <i class="duck-i-alive"></i>
-            <i class="duck-i-alive"></i>
-            <i class="duck-i-alive"></i>
-          </div>
-          <div class="required-ducks" data-required-ducks-bar></div>
-        </div>
-      </section>
-      <section class="score">
-        <div class="score-number" data-score>000000</div>
-        <p class="score-text">SCORE</p>
-      </section>
     </div>
+
     <button id="start-game-btn">Start game</button>
   </body>
 </html>
