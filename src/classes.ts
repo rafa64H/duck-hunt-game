@@ -1,4 +1,10 @@
-import { CANVAS_HEIGHT, CANVAS_WIDTH, createShowDucks, ctx } from './main';
+import {
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
+  createShowDucks,
+  ctx,
+  globalVariables,
+} from './main';
 
 const GAME_SPRITES_DOG = new Image();
 
@@ -252,28 +258,6 @@ export class Duck {
   }
 
   update(): void {
-    const borderTop = 0;
-    const borderRight = CANVAS_WIDTH - this.width;
-    const borderBottom = CANVAS_HEIGHT - this.height - 100;
-    const borderLeft = 0;
-
-    if (this.x <= borderLeft) {
-      this.x = borderLeft;
-      this.speedX = Math.abs(this.speedX);
-    }
-    if (this.x >= borderRight) {
-      this.x = borderRight;
-      this.speedX = -Math.abs(this.speedX);
-    }
-    if (this.y <= borderTop) {
-      this.y = borderTop;
-      this.speedY = Math.abs(this.speedY);
-    }
-    if (this.y >= borderBottom) {
-      this.y = borderBottom;
-      this.speedY = -Math.abs(this.speedY);
-    }
-
     if (this.counterAnimation === 70) {
       this.changeDirection();
       this.counterAnimation = 0;
@@ -308,5 +292,66 @@ export class Duck {
       this.width,
       this.height
     );
+  }
+}
+
+export class Shoot {
+  public width: number;
+  public height: number;
+  public frames: number;
+  public counterAnimation: number;
+  constructor(public eventX: number, public eventY: number) {
+    this.width = 40;
+    this.height = 40;
+    this.x = eventX - this.width * 0.5;
+    this.y = eventY - this.height * 0.5;
+    this.frames = 0;
+    this.counterAnimation = 0;
+  }
+
+  delete() {
+    const indexOfThis = globalVariables.shootArr.indexOf(this);
+    globalVariables.shootArr.splice(indexOfThis, 1);
+  }
+
+  update() {
+    if (this.counterAnimation === 10) {
+      this.delete();
+    }
+    this.counterAnimation++;
+    this.frames++;
+  }
+
+  draw() {
+    ctx.fillStyle = 'white';
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
+}
+
+export class Collision {
+  collisionDucks() {
+    globalVariables.ducksToShow.forEach((duck) => {
+      const borderTop = 0;
+      const borderRight = CANVAS_WIDTH - duck.width;
+      const borderBottom = CANVAS_HEIGHT - duck.height - 100;
+      const borderLeft = 0;
+
+      if (duck.x <= borderLeft) {
+        duck.x = borderLeft;
+        duck.speedX = Math.abs(duck.speedX);
+      }
+      if (duck.x >= borderRight) {
+        duck.x = borderRight;
+        duck.speedX = -Math.abs(duck.speedX);
+      }
+      if (duck.y <= borderTop) {
+        duck.y = borderTop;
+        duck.speedY = Math.abs(duck.speedY);
+      }
+      if (duck.y >= borderBottom) {
+        duck.y = borderBottom;
+        duck.speedY = -Math.abs(duck.speedY);
+      }
+    });
   }
 }

@@ -1,11 +1,17 @@
-import { Dog, Duck } from './classes';
+import { Collision, Dog, Duck, Shoot } from './classes';
 
 const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
 
 export const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-export const CANVAS_WIDTH = (canvas.width = 1024);
-export const CANVAS_HEIGHT = (canvas.height = 500);
+export const CANVAS_WIDTH =
+  window.innerWidth < 1024
+    ? (canvas.width = window.innerWidth)
+    : (canvas.width = 1024);
+export const CANVAS_HEIGHT =
+  window.innerHeight < 500
+    ? (canvas.height = window.innerHeight)
+    : (canvas.height = 500);
 
 export const POSIBLE_DUCK_COLORS = ['blue', 'black', 'red'];
 
@@ -14,7 +20,10 @@ export const globalVariables = {
   levelsLeft: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as number[],
   ducksInTheLevel: [] as Duck[],
   ducksToShow: [] as Duck[],
+  shootArr: [] as Shoot[],
 };
+
+export const collisionInstance = new Collision();
 
 export function createShowDucks() {
   if (globalVariables.currentLevel >= 5) {
@@ -71,6 +80,13 @@ function gameLoop(dog: Dog) {
     duck.draw();
   });
 
+  globalVariables.shootArr.forEach((shoot) => {
+    shoot.update();
+    shoot.draw();
+  });
+
+  collisionInstance.collisionDucks();
+
   requestAnimationFrame(() => gameLoop(dog));
 }
 
@@ -81,4 +97,10 @@ const buttonStartGame = document.querySelector(
 buttonStartGame.addEventListener('click', (e) => {
   startGame();
   buttonStartGame.remove();
+});
+
+canvas.addEventListener('click', (e: MouseEvent) => {
+  const shoot = new Shoot(e.x, e.y);
+
+  globalVariables.shootArr.push(shoot);
 });
