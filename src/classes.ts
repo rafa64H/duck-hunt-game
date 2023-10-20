@@ -323,6 +323,13 @@ export class Duck {
   update(): void {
     if (this.action === "flying") {
       this.counterAnimation++;
+      if (this.frames % (this.animationSpeed + 4) === 0) {
+        const duckFlappingSound = new Audio(
+          "src/assets/audio/duck-flapping.mp3"
+        );
+        duckFlappingSound.volume = 0.5;
+        duckFlappingSound.play();
+      }
       if (this.frames % this.animationSpeed === 0) {
         if (this.counterAnimation >= 70) {
           this.changeDirection();

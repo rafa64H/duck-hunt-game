@@ -142,6 +142,8 @@ canvas.addEventListener("click", (e: MouseEvent) => {
   unspentBullets[unspentBullets.length - 1].setAttribute("data-spent", "true");
 
   const shoot = new Shoot(e.offsetX, e.offsetY);
+  const shootSound = new Audio("src/assets/audio/gunshot.mp3");
+  shootSound.play();
 
   globalVariables.shootArr.push(shoot);
 });
