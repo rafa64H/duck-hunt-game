@@ -6,15 +6,15 @@ import {
   ctx,
   dog,
   globalVariables,
-} from './main';
+} from "./main";
 
 const GAME_SPRITES_DOG = new Image();
 
-GAME_SPRITES_DOG.src = 'src/assets/game-sprites-dog.png';
+GAME_SPRITES_DOG.src = "src/assets/game-sprites-dog.png";
 
 const GAME_SPRITES_DUCKS = new Image();
 
-GAME_SPRITES_DUCKS.src = 'src/assets/game-sprites-ducks.png';
+GAME_SPRITES_DUCKS.src = "src/assets/game-sprites-ducks.png";
 export class Dog {
   public x: number;
   public y: number;
@@ -30,14 +30,14 @@ export class Dog {
   public frames;
   public counterAnimation: number;
   public action:
-    | ''
-    | 'idle'
-    | 'starting game'
-    | 'hunted duck'
-    | 'flew away duck';
+    | ""
+    | "idle"
+    | "starting game"
+    | "hunted duck"
+    | "flew away duck";
 
   constructor() {
-    this.action = '';
+    this.action = "";
     this.x = 0;
     this.y = 0;
     this.speedX = 0;
@@ -56,7 +56,7 @@ export class Dog {
   }
 
   declaringPositions(): void {
-    if (this.action === 'idle') {
+    if (this.action === "idle") {
       this.counterAnimation = 0;
       this.x = -100;
       this.y = -100;
@@ -65,7 +65,7 @@ export class Dog {
       this.spriteWidth = 0;
       this.spriteHeight = 0;
     }
-    if (this.action === 'starting game') {
+    if (this.action === "starting game") {
       this.counterAnimation = 0;
       this.x = 0;
       this.y = CANVAS_HEIGHT - this.height;
@@ -74,7 +74,7 @@ export class Dog {
       this.spriteWidth = 60;
       this.spriteHeight = 54;
     }
-    if (this.action === 'hunted duck' || this.action === 'flew away duck') {
+    if (this.action === "hunted duck" || this.action === "flew away duck") {
       this.counterAnimation = 0;
       this.x = CANVAS_WIDTH * 0.5;
       this.y = CANVAS_HEIGHT - this.height;
@@ -87,7 +87,7 @@ export class Dog {
 
   update(): void {
     if (this.frames % this.animationSpeed === 0) {
-      if (this.action === 'starting game') {
+      if (this.action === "starting game") {
         this.speedX = 8;
 
         if (this.counterAnimation >= 20) {
@@ -106,7 +106,7 @@ export class Dog {
                 this.speedY = 20;
                 this.spriteFrameX++;
                 if (this.y > CANVAS_HEIGHT) {
-                  this.action = 'idle';
+                  this.action = "idle";
                   this.declaringPositions();
                   createShowDucks();
                 }
@@ -120,7 +120,7 @@ export class Dog {
         }
       }
 
-      if (this.action === 'hunted duck') {
+      if (this.action === "hunted duck") {
         this.spriteFrameX = 5;
         this.spriteFrameY = 0;
         this.speedY = -15;
@@ -130,7 +130,7 @@ export class Dog {
         if (this.counterAnimation >= 10) {
           this.speedY = 15;
           if (this.y > CANVAS_HEIGHT) {
-            this.action = 'idle';
+            this.action = "idle";
             this.declaringPositions();
             createShowDucks();
           }
@@ -138,7 +138,7 @@ export class Dog {
         this.counterAnimation++;
       }
 
-      if (this.action === 'flew away duck') {
+      if (this.action === "flew away duck") {
         this.spriteFrameX === 4 ? (this.spriteFrameX = 3) : this.spriteFrameX++;
         this.spriteFrameY = 1;
         this.speedY = -15;
@@ -147,6 +147,11 @@ export class Dog {
         }
         if (this.counterAnimation >= 10) {
           this.speedY = 15;
+          if (this.y > CANVAS_HEIGHT) {
+            this.action = "idle";
+            this.declaringPositions();
+            createShowDucks();
+          }
         }
         this.counterAnimation++;
       }
@@ -158,7 +163,7 @@ export class Dog {
   }
 
   draw(): void {
-    if (this.action === 'starting game') {
+    if (this.action === "starting game") {
       ctx.drawImage(
         GAME_SPRITES_DOG,
         this.spriteWidth * this.spriteFrameX,
@@ -172,14 +177,14 @@ export class Dog {
       );
       if (this.counterAnimation >= 45) {
         //When starting the game, create some grass so the dog can hide
-        ctx.fillStyle = 'lightgreen';
+        ctx.fillStyle = "lightgreen";
         ctx.fillRect(0, CANVAS_HEIGHT - 100, CANVAS_WIDTH, 100);
-        ctx.fillStyle = 'green';
+        ctx.fillStyle = "green";
         ctx.fillRect(0, CANVAS_HEIGHT - 50, CANVAS_WIDTH, 50);
       }
     }
 
-    if (this.action === 'hunted duck' || this.action === 'flew away duck') {
+    if (this.action === "hunted duck" || this.action === "flew away duck") {
       ctx.drawImage(
         GAME_SPRITES_DOG,
         this.spriteWidth * this.spriteFrameX,
@@ -191,16 +196,16 @@ export class Dog {
         this.width,
         this.height
       );
-      ctx.fillStyle = 'lightgreen';
+      ctx.fillStyle = "lightgreen";
       ctx.fillRect(0, CANVAS_HEIGHT - 100, CANVAS_WIDTH, 100);
-      ctx.fillStyle = 'green';
+      ctx.fillStyle = "green";
       ctx.fillRect(0, CANVAS_HEIGHT - 50, CANVAS_WIDTH, 50);
     }
   }
 }
 
 export class Duck {
-  public action: 'flying' | 'dying';
+  public action: "flying" | "dying" | "fly away";
   public removeCollisionDetecion: boolean;
   public x: number;
   public y: number;
@@ -218,9 +223,12 @@ export class Duck {
   public frames: number;
   public counterAnimation: number;
 
-  constructor(public color: string, public level: number) {
+  constructor(
+    public color: string,
+    public level: number
+  ) {
     this.level = level;
-    this.action = 'flying';
+    this.action = "flying";
     this.removeCollisionDetecion = false;
     this.x = 0;
     this.y = 0;
@@ -230,7 +238,7 @@ export class Duck {
     this.spriteWidth = 0;
     this.spriteHeight = 0;
     this.spriteFrameX =
-      this.color === 'blue' ? 0 : this.color === 'black' ? 3 : 6;
+      this.color === "blue" ? 0 : this.color === "black" ? 3 : 6;
 
     this.spriteFrameY = 0;
     this.speedXOnLevel = level;
@@ -251,11 +259,11 @@ export class Duck {
     );
     this.x = randomX;
     this.y = randomY;
-    if (this.color === 'blue') {
+    if (this.color === "blue") {
       this.spriteWidth = 38;
       this.spriteHeight = 40;
     }
-    if (this.color === 'black' || this.color === 'red') {
+    if (this.color === "black" || this.color === "red") {
       this.spriteWidth = 42;
       this.spriteHeight = 40;
     }
@@ -286,56 +294,62 @@ export class Duck {
     }
   }
 
-  delete(): void {
+  delete(typeOfDelete: "flew away" | "hunted"): void {
     const indexOfThis = globalVariables.ducksToShow.indexOf(this);
     globalVariables.ducksToShow.splice(indexOfThis, 1);
 
-    const notHuntedDuckIcons = globalVariables.duckIcons.filter((duckIcon) => {
-      const huntedDuckAttribute = duckIcon.getAttribute('data-hunted');
-      return huntedDuckAttribute !== 'true';
-    });
+    if (typeOfDelete === "flew away") {
+      if (globalVariables.ducksToShow.length === 0) {
+        dog.action = "flew away duck";
+        dog.declaringPositions();
+      }
+    } else {
+      const notHuntedDuckIcons = globalVariables.duckIcons.filter(
+        (duckIcon) => {
+          const huntedDuckAttribute = duckIcon.getAttribute("data-hunted");
+          return huntedDuckAttribute !== "true";
+        }
+      );
 
-    notHuntedDuckIcons[0].setAttribute('data-hunted', 'true');
+      notHuntedDuckIcons[0].setAttribute("data-hunted", "true");
 
-    console.log(globalVariables.duckIcons);
-    if (globalVariables.ducksToShow.length === 0) {
-      dog.action = 'hunted duck';
-      console.log(dog.x, dog.y, dog.width, dog.height);
-      dog.declaringPositions();
-      console.log(dog.x, dog.y, dog.width, dog.height);
+      if (globalVariables.ducksToShow.length === 0) {
+        dog.action = "hunted duck";
+        dog.declaringPositions();
+      }
     }
   }
 
   update(): void {
-    if (this.action === 'flying') {
+    if (this.action === "flying") {
       this.counterAnimation++;
       if (this.frames % this.animationSpeed === 0) {
-        console.log(this.counterAnimation);
         if (this.counterAnimation >= 70) {
           this.changeDirection();
           this.counterAnimation = 0;
         }
 
-        if (this.color === 'blue') {
+        if (this.color === "blue") {
           this.spriteFrameX <= 1
             ? this.spriteFrameX++
             : (this.spriteFrameX = 0);
         }
-        if (this.color === 'black') {
+        if (this.color === "black") {
           this.spriteFrameX <= 4
             ? this.spriteFrameX++
             : (this.spriteFrameX = 3);
         }
-        if (this.color === 'red') {
+        if (this.color === "red") {
           this.spriteFrameX <= 7
             ? this.spriteFrameX++
             : (this.spriteFrameX = 6);
         }
       }
     }
-    if (this.action === 'dying') {
+    if (this.action === "dying") {
+      this.removeCollisionDetecion = true;
       this.spriteFrameX =
-        this.color === 'blue' ? 0 : this.color === 'black' ? 3 : 6;
+        this.color === "blue" ? 0 : this.color === "black" ? 3 : 6;
       this.spriteFrameY = 3;
       this.speedX = 0;
       this.speedY = 0;
@@ -344,12 +358,39 @@ export class Duck {
       if (this.counterAnimation >= 100) {
         this.speedY = 10;
         this.spriteFrameX =
-          this.color === 'blue' ? 1 : this.color === 'black' ? 4 : 7;
+          this.color === "blue" ? 1 : this.color === "black" ? 4 : 7;
 
         if (this.y >= CANVAS_HEIGHT) {
-          this.delete();
+          this.delete("hunted");
         }
       }
+    }
+    if (this.action === "fly away") {
+      this.removeCollisionDetecion = true;
+      this.spriteFrameY = 2;
+      this.speedX = 0;
+      this.speedY = -Math.abs(this.speedYOnLevel);
+      if (this.frames % this.animationSpeed === 0) {
+        if (this.color === "blue") {
+          this.spriteFrameX <= 1
+            ? this.spriteFrameX++
+            : (this.spriteFrameX = 0);
+        }
+        if (this.color === "black") {
+          this.spriteFrameX <= 4
+            ? this.spriteFrameX++
+            : (this.spriteFrameX = 3);
+        }
+        if (this.color === "red") {
+          this.spriteFrameX <= 7
+            ? this.spriteFrameX++
+            : (this.spriteFrameX = 6);
+        }
+      }
+      if (this.y + this.height < 0) {
+        this.delete("flew away");
+      }
+      this.counterAnimation++;
     }
 
     this.x += this.speedX;
@@ -370,7 +411,7 @@ export class Duck {
       this.height
     );
 
-    if (this.action === 'dying') {
+    if (this.action === "dying") {
       ctx.drawImage(
         GAME_SPRITES_DUCKS,
         this.spriteWidth * this.spriteFrameX,
@@ -382,9 +423,9 @@ export class Duck {
         this.width,
         this.height
       );
-      ctx.fillStyle = 'lightgreen';
+      ctx.fillStyle = "lightgreen";
       ctx.fillRect(0, CANVAS_HEIGHT - 100, CANVAS_WIDTH, 100);
-      ctx.fillStyle = 'green';
+      ctx.fillStyle = "green";
       ctx.fillRect(0, CANVAS_HEIGHT - 50, CANVAS_WIDTH, 50);
     }
   }
@@ -397,7 +438,10 @@ export class Shoot {
   public height: number;
   public frames: number;
   public counterAnimation: number;
-  constructor(public eventX: number, public eventY: number) {
+  constructor(
+    public eventX: number,
+    public eventY: number
+  ) {
     this.width = 40;
     this.height = 40;
     this.x = eventX - this.width * 0.5;
@@ -409,6 +453,22 @@ export class Shoot {
   delete() {
     const indexOfThis = globalVariables.shootArr.indexOf(this);
     globalVariables.shootArr.splice(indexOfThis, 1);
+
+    const unspentBullets = globalVariables.bulletIcons.filter((bulletIcon) => {
+      const spent = bulletIcon.getAttribute("data-spent");
+      return spent !== "true";
+    });
+
+    const aliveDucks = globalVariables.ducksToShow.filter((duck) => {
+      return duck.action === "flying";
+    });
+
+    if (unspentBullets.length === 0 && aliveDucks.length !== 0) {
+      aliveDucks.forEach((duck) => {
+        duck.action = "fly away";
+      });
+      return;
+    }
   }
 
   update(): void {
@@ -421,7 +481,7 @@ export class Shoot {
   }
 
   draw(): void {
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = "white";
     ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 }
@@ -465,8 +525,7 @@ export class Collision {
         //No collision
       } else {
         duck.counterAnimation = 0;
-        duck.action = 'dying';
-        duck.removeCollisionDetecion = true;
+        duck.action = "dying";
       }
     });
   }

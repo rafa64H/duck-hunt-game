@@ -1,7 +1,7 @@
-import { Collision, Dog, Duck, Shoot } from './classes';
+import { Collision, Dog, Duck, Shoot } from "./classes";
 
-const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
-export const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+export const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
 export const CANVAS_WIDTH =
   window.innerWidth < 1024
@@ -12,23 +12,23 @@ export const CANVAS_HEIGHT =
     ? (canvas.height = window.innerHeight)
     : (canvas.height = 500);
 
-export const POSIBLE_DUCK_COLORS = ['blue', 'black', 'red'];
+export const POSIBLE_DUCK_COLORS = ["blue", "black", "red"];
 
 const duckIconsElements = document.querySelector(
-  '[data-duck-icons]'
+  "[data-duck-icons]"
 ) as HTMLDivElement;
 
 const shotsBulletIcons = document.querySelector(
-  '[data-shots-bullet-icons]'
+  "[data-shots-bullet-icons]"
 ) as HTMLDivElement;
 
-export const scoreElement = document.querySelector('[data-score]');
+export const scoreElement = document.querySelector("[data-score]");
 
-export const levelElement = document.querySelector('[data-level-element]');
+export const levelElement = document.querySelector("[data-level-element]");
 console.log(levelElement);
 
 export const requiredDucksBar = document.querySelector(
-  '[data-required-ducks-bar]'
+  "[data-required-ducks-bar]"
 ) as HTMLElement;
 
 export const globalVariables = {
@@ -48,6 +48,9 @@ scoreElement!.textContent = globalVariables.currentScore.toString();
 export const collisionInstance = new Collision();
 
 export function createShowDucks() {
+  globalVariables.bulletIcons.forEach((bulletIcon) => {
+    bulletIcon.setAttribute("data-spent", "false");
+  });
   if (globalVariables.currentLevel >= 5) {
     globalVariables.ducksToShow = globalVariables.ducksInTheLevel.splice(0, 2);
     globalVariables.ducksToShow.forEach((duck) => duck.declaringPositions());
@@ -57,30 +60,30 @@ export function createShowDucks() {
   }
 }
 function drawBackground(): void {
-  ctx.fillStyle = 'lightblue';
+  ctx.fillStyle = "lightblue";
   ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  ctx.fillStyle = 'brown';
+  ctx.fillStyle = "brown";
   ctx.fillRect(50, CANVAS_HEIGHT - 300, 70, 300);
-  ctx.fillStyle = 'green';
+  ctx.fillStyle = "green";
   ctx.beginPath();
   ctx.arc(84, 150, 70, 0, 2 * Math.PI);
   ctx.fill();
-  ctx.fillStyle = 'lightgreen';
+  ctx.fillStyle = "lightgreen";
   ctx.fillRect(0, CANVAS_HEIGHT - 100, CANVAS_WIDTH, 100);
-  ctx.fillStyle = 'green';
+  ctx.fillStyle = "green";
   ctx.fillRect(0, CANVAS_HEIGHT - 50, CANVAS_WIDTH, 50);
 }
 drawBackground();
 
 export const dog = new Dog();
-dog.action = 'starting game';
+dog.action = "starting game";
 dog.declaringPositions();
 
 function startGame() {
   const displayGameInfo = document.querySelector(
-    '[data-display-game-info]'
+    "[data-display-game-info]"
   ) as HTMLParagraphElement;
-  displayGameInfo.setAttribute('data-display-game-info', 'true');
+  displayGameInfo.setAttribute("data-display-game-info", "true");
 
   for (let i = 0; i < 10; i++) {
     const numberForColor = Math.round(Math.random() * 2);
@@ -118,23 +121,27 @@ function gameLoop() {
 }
 
 const buttonStartGame = document.querySelector(
-  '#start-game-btn'
+  "#start-game-btn"
 ) as HTMLButtonElement;
 
-buttonStartGame.addEventListener('click', (e) => {
+buttonStartGame.addEventListener("click", (e) => {
   startGame();
   buttonStartGame.remove();
 });
 
-canvas.addEventListener('click', (e: MouseEvent) => {
+canvas.addEventListener("click", (e: MouseEvent) => {
+  const unspentBullets = globalVariables.bulletIcons.filter((bulletIcon) => {
+    const spent = bulletIcon.getAttribute("data-spent");
+    return spent !== "true";
+  });
+
+  if (dog.action === "starting game" || unspentBullets.length === 0) {
+    return;
+  }
+
+  unspentBullets[unspentBullets.length - 1].setAttribute("data-spent", "true");
+
   const shoot = new Shoot(e.offsetX, e.offsetY);
 
   globalVariables.shootArr.push(shoot);
-
-  const unspentBullets = globalVariables.bulletIcons.filter((bulletIcon) => {
-    const spent = bulletIcon.getAttribute('data-spent');
-    return spent !== 'true';
-  });
-
-  unspentBullets[unspentBullets.length - 1].setAttribute('data-spent', 'true');
 });
