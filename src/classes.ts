@@ -29,6 +29,7 @@ export class Dog {
   public animationSpeed: number;
   public frames;
   public counterAnimation: number;
+  public audio: HTMLAudioElement;
   public action:
     | ""
     | "idle"
@@ -53,6 +54,7 @@ export class Dog {
     this.animationSpeed = 7;
     this.frames = 0;
     this.counterAnimation = 0;
+    this.audio = new Audio();
   }
 
   declaringPositions(): void {
@@ -73,6 +75,7 @@ export class Dog {
       this.speedY = 0;
       this.spriteWidth = 60;
       this.spriteHeight = 54;
+      this.audio.src = "src/assets/audio/starting-game.mp3";
     }
     if (this.action === "hunted duck") {
       this.counterAnimation = 0;
@@ -84,6 +87,7 @@ export class Dog {
       this.spriteFrameY = 0;
       this.spriteWidth = 62.5;
       this.spriteHeight = 54;
+      this.audio.src = "src/assets/audio/duck-caught.mp3";
     }
     if (this.action === "flew away duck") {
       this.counterAnimation = 0;
@@ -96,6 +100,7 @@ export class Dog {
       this.spriteFrameY = 1;
       this.spriteWidth = 62.5;
       this.spriteHeight = 54;
+      this.audio.src = "src/assets/audio/dog-laughing.mp3";
     }
   }
 
@@ -103,21 +108,22 @@ export class Dog {
     console.log(this.x, this.y, this.width, this.height, this.action);
     if (this.frames % this.animationSpeed === 0) {
       if (this.action === "starting game") {
+        if (this.audio.currentTime < this.audio.duration) this.audio.play();
         this.speedX = 8;
 
         if (this.counterAnimation >= 20) {
           this.spriteFrameX = 4;
           this.speedX = 0;
 
-          if (this.counterAnimation >= 30) {
+          if (this.counterAnimation >= 40) {
             this.spriteFrameY = 1;
             this.spriteFrameX = 0;
-            if (this.counterAnimation >= 40) {
+            if (this.counterAnimation >= 50) {
               this.spriteFrameX++;
               this.speedY = -20;
               this.speedX = 4;
 
-              if (this.counterAnimation >= 45) {
+              if (this.counterAnimation >= 55 /*Dog hiding*/) {
                 this.speedY = 20;
                 this.spriteFrameX++;
                 if (this.y > CANVAS_HEIGHT) {
@@ -136,6 +142,7 @@ export class Dog {
       }
 
       if (this.action === "hunted duck") {
+        if (this.audio.currentTime < this.audio.duration) this.audio.play();
         this.speedY = -15;
         if (this.y <= CANVAS_HEIGHT - 165 && this.counterAnimation < 10) {
           this.speedY = 0;
@@ -152,6 +159,7 @@ export class Dog {
       }
 
       if (this.action === "flew away duck") {
+        if (this.audio.currentTime < this.audio.duration) this.audio.play();
         this.spriteFrameX === 4 ? (this.spriteFrameX = 3) : this.spriteFrameX++;
         this.speedY = -15;
         if (this.y <= CANVAS_HEIGHT - 165 && this.counterAnimation < 10) {
@@ -187,7 +195,7 @@ export class Dog {
         this.width,
         this.height
       );
-      if (this.counterAnimation >= 45) {
+      if (this.counterAnimation >= 55 /*Dog hiding*/) {
         //When starting the game, create some grass so the dog can hide
         ctx.fillStyle = "lightgreen";
         ctx.fillRect(0, CANVAS_HEIGHT - 100, CANVAS_WIDTH, 100);
@@ -234,6 +242,7 @@ export class Duck {
   public animationSpeed: number;
   public frames: number;
   public counterAnimation: number;
+  public audio: HTMLAudioElement;
 
   constructor(
     public color: string,
@@ -260,6 +269,16 @@ export class Duck {
     this.animationSpeed = 4;
     this.frames = 0;
     this.counterAnimation = 0;
+    this.audio = new Audio("src/assets/audio/duck-flapping.mp3");
+  }
+
+  changeAudio(): void {
+    if (this.action === "dying") {
+      this.audio.src = "src/assets/audio/duck-falling.mp3";
+    }
+    if (this.action === "hunted") {
+      this.audio.src = "src/assets/audio/duck-drop.mp3";
+    }
   }
 
   declaringPositions(): void {
@@ -348,13 +367,11 @@ export class Duck {
   update(): void {
     if (this.action === "flying") {
       this.counterAnimation++;
-      if (this.frames % (this.animationSpeed + 4) === 0) {
-        const duckFlappingSound = new Audio(
-          "src/assets/audio/duck-flapping.mp3"
-        );
-        duckFlappingSound.volume = 0.5;
-        duckFlappingSound.play();
+      if (this.audio.currentTime >= this.audio.duration * 0.8) {
+        this.audio.currentTime = 0;
       }
+      this.audio.play();
+
       if (this.frames % this.animationSpeed === 0) {
         if (this.counterAnimation >= 70) {
           this.changeDirection();
@@ -388,12 +405,15 @@ export class Duck {
       this.counterAnimation++;
 
       if (this.counterAnimation >= 100) {
+        this.audio.play();
         this.speedY = 10;
         this.spriteFrameX =
           this.color === "blue" ? 1 : this.color === "black" ? 4 : 7;
 
         if (this.y >= CANVAS_HEIGHT) {
           this.action = "hunted";
+          this.changeAudio();
+          this.audio.play();
           this.delete("hunted");
         }
       }
@@ -561,6 +581,7 @@ export class Collision {
         } else {
           duck.counterAnimation = 0;
           duck.action = "dying";
+          duck.changeAudio();
         }
       }
     });
