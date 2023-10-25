@@ -74,18 +74,33 @@ export class Dog {
       this.spriteWidth = 60;
       this.spriteHeight = 54;
     }
-    if (this.action === "hunted duck" || this.action === "flew away duck") {
+    if (this.action === "hunted duck") {
       this.counterAnimation = 0;
       this.x = CANVAS_WIDTH * 0.5;
       this.y = CANVAS_HEIGHT - this.height;
       this.speedX = 0;
       this.speedY = 0;
+      this.spriteFrameX = 5;
+      this.spriteFrameY = 0;
+      this.spriteWidth = 62.5;
+      this.spriteHeight = 54;
+    }
+    if (this.action === "flew away duck") {
+      this.counterAnimation = 0;
+      this.x = CANVAS_WIDTH * 0.5;
+      this.y = CANVAS_HEIGHT - this.height;
+      this.speedX = 0;
+      this.speedY = 0;
+
+      this.spriteFrameX = 4;
+      this.spriteFrameY = 1;
       this.spriteWidth = 62.5;
       this.spriteHeight = 54;
     }
   }
 
   update(): void {
+    console.log(this.x, this.y, this.width, this.height, this.action);
     if (this.frames % this.animationSpeed === 0) {
       if (this.action === "starting game") {
         this.speedX = 8;
@@ -121,8 +136,6 @@ export class Dog {
       }
 
       if (this.action === "hunted duck") {
-        this.spriteFrameX = 5;
-        this.spriteFrameY = 0;
         this.speedY = -15;
         if (this.y <= CANVAS_HEIGHT - 165 && this.counterAnimation < 10) {
           this.speedY = 0;
@@ -140,7 +153,6 @@ export class Dog {
 
       if (this.action === "flew away duck") {
         this.spriteFrameX === 4 ? (this.spriteFrameX = 3) : this.spriteFrameX++;
-        this.spriteFrameY = 1;
         this.speedY = -15;
         if (this.y <= CANVAS_HEIGHT - 165 && this.counterAnimation < 10) {
           this.speedY = 0;
@@ -205,7 +217,7 @@ export class Dog {
 }
 
 export class Duck {
-  public action: "flying" | "dying" | "fly away";
+  public action: "flying" | "dying" | "fly away" | "hunted" | "flew away";
   public removeCollisionDetecion: boolean;
   public x: number;
   public y: number;
@@ -295,14 +307,13 @@ export class Duck {
   }
 
   delete(typeOfDelete: "flew away" | "hunted"): void {
-    const indexOfThis = globalVariables.ducksToShow.indexOf(this);
-    globalVariables.ducksToShow.splice(indexOfThis, 1);
+    // const indexOfThis = globalVariables.ducksToShow.indexOf(this);
+    // globalVariables.ducksToShow.splice(indexOfThis, 1);
 
     if (typeOfDelete === "flew away") {
-      if (globalVariables.ducksToShow.length === 0) {
-        dog.action = "flew away duck";
-        dog.declaringPositions();
-      }
+      dog.action = "flew away duck";
+      dog.declaringPositions();
+      globalVariables.ducksToShow.splice(0, 2);
     } else {
       const notHuntedDuckIcons = globalVariables.duckIcons.filter(
         (duckIcon) => {
@@ -313,9 +324,23 @@ export class Duck {
 
       notHuntedDuckIcons[0].setAttribute("data-hunted", "true");
 
-      if (globalVariables.ducksToShow.length === 0) {
+      const huntedDucks = globalVariables.ducksToShow.filter((duck) => {
+        return duck.action === "hunted";
+      });
+
+      const flyingDucks = globalVariables.ducksToShow.some((duck) => {
+        return duck.action !== "hunted" && duck.action !== "flew away";
+      });
+
+      if (huntedDucks.length === 2 && !flyingDucks) {
         dog.action = "hunted duck";
         dog.declaringPositions();
+        globalVariables.ducksToShow.splice(0, 2);
+      } else if (flyingDucks) {
+      } else {
+        dog.action = "flew away duck";
+        dog.declaringPositions();
+        globalVariables.ducksToShow.splice(0, 2);
       }
     }
   }
@@ -368,6 +393,7 @@ export class Duck {
           this.color === "blue" ? 1 : this.color === "black" ? 4 : 7;
 
         if (this.y >= CANVAS_HEIGHT) {
+          this.action = "hunted";
           this.delete("hunted");
         }
       }
@@ -395,6 +421,7 @@ export class Duck {
         }
       }
       if (this.y + this.height < 0) {
+        this.action = "flew away";
         this.delete("flew away");
       }
       this.counterAnimation++;
@@ -523,16 +550,18 @@ export class Collision {
 
   collisionShoot(shoot: Shoot): void {
     globalVariables.ducksToShow.forEach((duck) => {
-      if (
-        shoot.x > duck.x + duck.width ||
-        shoot.x + shoot.width < duck.x ||
-        shoot.y > duck.y + duck.height ||
-        shoot.y + shoot.height < duck.y
-      ) {
-        //No collision
-      } else {
-        duck.counterAnimation = 0;
-        duck.action = "dying";
+      if (duck.action === "flying") {
+        if (
+          shoot.x > duck.x + duck.width ||
+          shoot.x + shoot.width < duck.x ||
+          shoot.y > duck.y + duck.height ||
+          shoot.y + shoot.height < duck.y
+        ) {
+          //No collision
+        } else {
+          duck.counterAnimation = 0;
+          duck.action = "dying";
+        }
       }
     });
   }
