@@ -2,7 +2,7 @@ import {
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
   collisionInstance,
-  createShowDucks,
+  showDucks,
   ctx,
   dog,
   globalVariables,
@@ -35,7 +35,8 @@ export class Dog {
     | "idle"
     | "starting game"
     | "hunted duck"
-    | "flew away duck";
+    | "flew away duck"
+    | "starting next level";
 
   constructor() {
     this.action = "";
@@ -67,7 +68,10 @@ export class Dog {
       this.spriteWidth = 0;
       this.spriteHeight = 0;
     }
-    if (this.action === "starting game") {
+    if (
+      this.action === "starting game" ||
+      this.action === "starting next level"
+    ) {
       this.counterAnimation = 0;
       this.x = 0;
       this.y = CANVAS_HEIGHT - this.height;
@@ -107,7 +111,10 @@ export class Dog {
   update(): void {
     console.log(this.x, this.y, this.width, this.height, this.action);
     if (this.frames % this.animationSpeed === 0) {
-      if (this.action === "starting game") {
+      if (
+        this.action === "starting game" ||
+        this.action === "starting next level"
+      ) {
         if (this.audio.currentTime < this.audio.duration) this.audio.play();
         this.speedX = 8;
 
@@ -129,7 +136,7 @@ export class Dog {
                 if (this.y > CANVAS_HEIGHT) {
                   this.action = "idle";
                   this.declaringPositions();
-                  createShowDucks();
+                  showDucks();
                 }
               }
             }
@@ -152,7 +159,7 @@ export class Dog {
           if (this.y > CANVAS_HEIGHT) {
             this.action = "idle";
             this.declaringPositions();
-            createShowDucks();
+            showDucks();
           }
         }
         this.counterAnimation++;
@@ -170,7 +177,7 @@ export class Dog {
           if (this.y > CANVAS_HEIGHT) {
             this.action = "idle";
             this.declaringPositions();
-            createShowDucks();
+            showDucks();
           }
         }
         this.counterAnimation++;
@@ -183,7 +190,10 @@ export class Dog {
   }
 
   draw(): void {
-    if (this.action === "starting game") {
+    if (
+      this.action === "starting game" ||
+      this.action === "starting next level"
+    ) {
       ctx.drawImage(
         GAME_SPRITES_DOG,
         this.spriteWidth * this.spriteFrameX,
@@ -264,8 +274,8 @@ export class Duck {
     this.spriteFrameY = 0;
     this.speedXOnLevel = level;
     this.speedYOnLevel = level;
-    this.speedX = level;
-    this.speedY = level;
+    this.speedX = this.speedXOnLevel;
+    this.speedY = this.speedYOnLevel;
     this.animationSpeed = 4;
     this.frames = 0;
     this.counterAnimation = 0;
@@ -326,16 +336,9 @@ export class Duck {
   }
 
   delete(typeOfDelete: "flew away" | "hunted"): void {
-    // const indexOfThis = globalVariables.ducksToShow.indexOf(this);
-    // globalVariables.ducksToShow.splice(indexOfThis, 1);
+    const currentLevelGreaterThanFour = this.level > 4 ? true : false;
 
     if (typeOfDelete === "flew away") {
-      const flewAwayOrHuntedDucks = globalVariables.ducksToShow.filter(
-        (duck) => {
-          return duck.action === "flew away" || duck.action === "hunted";
-        }
-      );
-
       const flyingDucks = globalVariables.ducksToShow.some((duck) => {
         return duck.action !== "hunted" && duck.action !== "flew away";
       });
@@ -343,9 +346,13 @@ export class Duck {
       if (!flyingDucks) {
         dog.action = "flew away duck";
         dog.declaringPositions();
-        globalVariables.ducksToShow.splice(0, 2);
+        currentLevelGreaterThanFour
+          ? globalVariables.ducksToShow.splice(0, 2)
+          : globalVariables.ducksToShow.splice(0, 1);
       }
     } else {
+      const numberOfDucksInLevel = currentLevelGreaterThanFour ? 2 : 1;
+
       const notHuntedDuckIcons = globalVariables.duckIcons.filter(
         (duckIcon) => {
           const huntedDuckAttribute = duckIcon.getAttribute("data-hunted");
@@ -363,15 +370,19 @@ export class Duck {
         return duck.action !== "hunted" && duck.action !== "flew away";
       });
 
-      if (huntedDucks.length === 2 && !flyingDucks) {
+      if (huntedDucks.length === numberOfDucksInLevel && !flyingDucks) {
         dog.action = "hunted duck";
         dog.declaringPositions();
-        globalVariables.ducksToShow.splice(0, 2);
+        currentLevelGreaterThanFour
+          ? globalVariables.ducksToShow.splice(0, 2)
+          : globalVariables.ducksToShow.splice(0, 1);
       } else if (flyingDucks) {
       } else {
         dog.action = "flew away duck";
         dog.declaringPositions();
-        globalVariables.ducksToShow.splice(0, 2);
+        currentLevelGreaterThanFour
+          ? globalVariables.ducksToShow.splice(0, 2)
+          : globalVariables.ducksToShow.splice(0, 1);
       }
     }
   }
@@ -434,7 +445,7 @@ export class Duck {
       this.removeCollisionDetecion = true;
       this.spriteFrameY = 2;
       this.speedX = 0;
-      this.speedY = -Math.abs(this.speedYOnLevel);
+      this.speedY = -10;
       if (this.frames % this.animationSpeed === 0) {
         if (this.color === "blue") {
           this.spriteFrameX <= 1

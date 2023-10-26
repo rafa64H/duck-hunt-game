@@ -32,7 +32,7 @@ export const requiredDucksBar = document.querySelector(
 ) as HTMLElement;
 
 export const globalVariables = {
-  currentLevel: 5 as number,
+  currentLevel: 1 as number,
   duckIcons: [...duckIconsElements.children] as HTMLElement[],
   bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
   currentScore: 0 as number,
@@ -47,10 +47,25 @@ scoreElement!.textContent = globalVariables.currentScore.toString();
 
 export const collisionInstance = new Collision();
 
-export function createShowDucks() {
+export function createDucksInTheLevel(): void {
+  for (let i = 0; i < 10; i++) {
+    const numberForColor = Math.round(Math.random() * 2);
+    const colorNewDuck = POSIBLE_DUCK_COLORS[numberForColor];
+
+    const newDuck = new Duck(colorNewDuck, globalVariables.currentLevel);
+    newDuck.declaringPositions();
+    globalVariables.ducksInTheLevel.push(newDuck);
+  }
+}
+
+export function restoreAmmo(): void {
   globalVariables.bulletIcons.forEach((bulletIcon) => {
     bulletIcon.setAttribute("data-spent", "false");
   });
+}
+
+export function showDucks(): void {
+  restoreAmmo();
   if (globalVariables.currentLevel >= 5) {
     globalVariables.ducksToShow = globalVariables.ducksInTheLevel.splice(0, 2);
     globalVariables.ducksToShow.forEach((duck) => duck.declaringPositions());
@@ -85,14 +100,7 @@ function startGame() {
   ) as HTMLParagraphElement;
   displayGameInfo.setAttribute("data-display-game-info", "true");
 
-  for (let i = 0; i < 10; i++) {
-    const numberForColor = Math.round(Math.random() * 2);
-    const colorNewDuck = POSIBLE_DUCK_COLORS[numberForColor];
-
-    const newDuck = new Duck(colorNewDuck, globalVariables.currentLevel);
-    newDuck.declaringPositions();
-    globalVariables.ducksInTheLevel.push(newDuck);
-  }
+  createDucksInTheLevel();
 
   gameLoop();
 }
