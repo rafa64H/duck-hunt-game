@@ -330,9 +330,21 @@ export class Duck {
     // globalVariables.ducksToShow.splice(indexOfThis, 1);
 
     if (typeOfDelete === "flew away") {
-      dog.action = "flew away duck";
-      dog.declaringPositions();
-      globalVariables.ducksToShow.splice(0, 2);
+      const flewAwayOrHuntedDucks = globalVariables.ducksToShow.filter(
+        (duck) => {
+          return duck.action === "flew away" || duck.action === "hunted";
+        }
+      );
+
+      const flyingDucks = globalVariables.ducksToShow.some((duck) => {
+        return duck.action !== "hunted" && duck.action !== "flew away";
+      });
+
+      if (!flyingDucks) {
+        dog.action = "flew away duck";
+        dog.declaringPositions();
+        globalVariables.ducksToShow.splice(0, 2);
+      }
     } else {
       const notHuntedDuckIcons = globalVariables.duckIcons.filter(
         (duckIcon) => {
