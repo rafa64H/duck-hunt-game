@@ -25,7 +25,6 @@ const shotsBulletIcons = document.querySelector(
 export const scoreElement = document.querySelector("[data-score]");
 
 export const levelElement = document.querySelector("[data-level-element]");
-console.log(levelElement);
 
 export const requiredDucksBar = document.querySelector(
   "[data-required-ducks-bar]"
@@ -80,22 +79,36 @@ export function countHuntedDucks(): void {
             audioLose.play();
           } else if (huntedDucksIcons.length === 10) {
             audioHighScore.play();
+            audioHighScore.onended = (): void => {
+              goToNextLevel();
+            };
+          } else {
+            setTimeout((): void => {
+              goToNextLevel();
+            }, 1000);
           }
         }
       };
     }
   }
   playNextAudioAndCount();
+}
 
-  // huntedDucksIcons.forEach((duckIcon) => {
-  //   while (audioPoints.currentTime < audioPoints.duration) {
-  //     audioPoints.play();
-  //   }
+export function goToNextLevel(): void {
+  globalVariables.currentLevel++;
+  globalVariables.currentRequiredDucks++;
 
-  //   audioPoints.pause();
-  //   audioPoints.currentTime = 0;
-  //   duckIcon.setAttribute("data-counting", "false");
-  // });
+  requiredDucksBar.style.width = `${
+    globalVariables.currentRequiredDucks * 10
+  }%`;
+  levelElement!.textContent = globalVariables.currentLevel.toString();
+
+  createDucksInTheLevel();
+  restoreAmmo();
+  restoreDuckIcons();
+
+  dog.action = "starting next level";
+  dog.declaringPositions();
 }
 
 export function createDucksInTheLevel(): void {
@@ -107,6 +120,12 @@ export function createDucksInTheLevel(): void {
     newDuck.declaringPositions();
     globalVariables.ducksInTheLevel.push(newDuck);
   }
+}
+
+export function restoreDuckIcons(): void {
+  globalVariables.duckIcons.forEach((duckIcon) => {
+    duckIcon.setAttribute("data-hunted", "false");
+  });
 }
 
 export function restoreAmmo(): void {
