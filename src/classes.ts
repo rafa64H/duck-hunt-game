@@ -6,6 +6,7 @@ import {
   ctx,
   dog,
   globalVariables,
+  countHuntedDucks,
 } from "./main";
 
 const GAME_SPRITES_DOG = new Image();
@@ -109,7 +110,6 @@ export class Dog {
   }
 
   update(): void {
-    console.log(this.x, this.y, this.width, this.height, this.action);
     if (this.frames % this.animationSpeed === 0) {
       if (
         this.action === "starting game" ||
@@ -158,8 +158,15 @@ export class Dog {
           this.speedY = 15;
           if (this.y > CANVAS_HEIGHT) {
             this.action = "idle";
+
             this.declaringPositions();
             showDucks();
+            if (
+              globalVariables.ducksInTheLevel.length === 0 &&
+              globalVariables.ducksToShow.length === 0
+            ) {
+              countHuntedDucks();
+            }
           }
         }
         this.counterAnimation++;
@@ -178,6 +185,12 @@ export class Dog {
             this.action = "idle";
             this.declaringPositions();
             showDucks();
+            if (
+              globalVariables.ducksInTheLevel.length === 0 &&
+              globalVariables.ducksToShow.length === 0
+            ) {
+              countHuntedDucks();
+            }
           }
         }
         this.counterAnimation++;

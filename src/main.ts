@@ -32,7 +32,8 @@ export const requiredDucksBar = document.querySelector(
 ) as HTMLElement;
 
 export const globalVariables = {
-  currentLevel: 1 as number,
+  currentLevel: 5 as number,
+  currentRequiredDucks: 4 as number,
   duckIcons: [...duckIconsElements.children] as HTMLElement[],
   bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
   currentScore: 0 as number,
@@ -46,6 +47,46 @@ levelElement!.textContent = globalVariables.currentLevel.toString();
 scoreElement!.textContent = globalVariables.currentScore.toString();
 
 export const collisionInstance = new Collision();
+
+export function countHuntedDucks(): void {
+  const audioPoints = new Audio();
+  audioPoints.src = "src/assets/audio/points.mp3";
+
+  const huntedDucksIcons = globalVariables.duckIcons.filter((duckIcon) => {
+    const huntedDuckAttribute = duckIcon.getAttribute("data-hunted");
+    return huntedDuckAttribute === "true";
+  });
+
+  let currentIndex = 0;
+
+  function playNextAudioAndCount(): void {
+    if (currentIndex < huntedDucksIcons.length) {
+      const duckIcon = huntedDucksIcons[currentIndex];
+      duckIcon.setAttribute("data-counting", "true");
+      audioPoints.play();
+
+      audioPoints.onended = (): void => {
+        duckIcon.removeAttribute("data-counting");
+        currentIndex++;
+        playNextAudioAndCount();
+      };
+    }
+  }
+  playNextAudioAndCount();
+
+  if (huntedDucksIcons.length < globalVariables.currentRequiredDucks) {
+  }
+
+  // huntedDucksIcons.forEach((duckIcon) => {
+  //   while (audioPoints.currentTime < audioPoints.duration) {
+  //     audioPoints.play();
+  //   }
+
+  //   audioPoints.pause();
+  //   audioPoints.currentTime = 0;
+  //   duckIcon.setAttribute("data-counting", "false");
+  // });
+}
 
 export function createDucksInTheLevel(): void {
   for (let i = 0; i < 10; i++) {

@@ -1,5 +1,5 @@
 :root {
-  --font: '8BIT WONDER', sans-serif;
+  --font: "8BIT WONDER", sans-serif;
 }
 
 *,
@@ -17,7 +17,7 @@ i {
   padding: 0.7rem;
   background-size: 100% 100%;
 }
-[data-empty-bullets='true'] {
+[data-empty-bullets="true"] {
   display: none;
 }
 
@@ -32,12 +32,12 @@ i {
   font-family: var(--font);
   color: rgb(79, 221, 79);
 }
-[data-display-game-info='true'] {
+[data-display-game-info="true"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-[data-display-game-info='false'] {
+[data-display-game-info="false"] {
   display: none;
 }
 
@@ -64,7 +64,7 @@ i {
   padding: 0.7rem;
   background-size: 100% 100%;
 }
-[data-spent='false'] {
+[data-spent="false"] {
   background-image: url(bullet-icon.png);
 }
 .shots__p {
@@ -90,11 +90,15 @@ i {
 }
 .duck-icons {
 }
-[data-hunted='false'] {
+[data-hunted="false"] {
   background-image: url(duck-icon-alive.png);
 }
-[data-hunted='true'] {
+[data-hunted="true"] {
   background-image: url(duck-icon-hunted.png);
+}
+[data-counting="true"] {
+  background-color: cyan;
+  padding: 0.5em;
 }
 .required-ducks {
   margin-top: 0.3em;
