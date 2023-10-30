@@ -32,7 +32,7 @@ export const requiredDucksBar = document.querySelector(
 ) as HTMLElement;
 
 export const globalVariables = {
-  currentLevel: 5 as number,
+  currentLevel: 1 as number,
   currentRequiredDucks: 4 as number,
   duckIcons: [...duckIconsElements.children] as HTMLElement[],
   bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
@@ -52,6 +52,12 @@ export function countHuntedDucks(): void {
   const audioPoints = new Audio();
   audioPoints.src = "src/assets/audio/points.mp3";
 
+  const audioLose = new Audio();
+  audioLose.src = "src/assets/audio/lose.mp3";
+
+  const audioHighScore = new Audio();
+  audioHighScore.src = "src/assets/audio/high-score.mp3";
+
   const huntedDucksIcons = globalVariables.duckIcons.filter((duckIcon) => {
     const huntedDuckAttribute = duckIcon.getAttribute("data-hunted");
     return huntedDuckAttribute === "true";
@@ -69,13 +75,17 @@ export function countHuntedDucks(): void {
         duckIcon.removeAttribute("data-counting");
         currentIndex++;
         playNextAudioAndCount();
+        if (currentIndex >= huntedDucksIcons.length) {
+          if (huntedDucksIcons.length < globalVariables.currentRequiredDucks) {
+            audioLose.play();
+          } else if (huntedDucksIcons.length === 10) {
+            audioHighScore.play();
+          }
+        }
       };
     }
   }
   playNextAudioAndCount();
-
-  if (huntedDucksIcons.length < globalVariables.currentRequiredDucks) {
-  }
 
   // huntedDucksIcons.forEach((duckIcon) => {
   //   while (audioPoints.currentTime < audioPoints.duration) {
