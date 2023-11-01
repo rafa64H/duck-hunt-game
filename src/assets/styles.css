@@ -12,6 +12,9 @@
 }
 
 canvas {
+  display: block;
+  margin: 0 auto;
+
   cursor:
     url("./aim-cursor.svg") 25 25,
     pointer;
@@ -28,6 +31,9 @@ i {
 }
 
 .background-game-info {
+  display: block;
+  margin: 0 auto;
+
   margin-top: -0.54em;
   padding: 0.5em 1em;
   width: min(100%, 1024px);
@@ -47,19 +53,19 @@ i {
   display: none;
 }
 
+.black-background-and-border {
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 0.5em;
+}
+
 .level-and-shots {
 }
 .level {
-  background-color: black;
-  border: 2px solid white;
-  border-radius: 10px;
-  padding: 0.5em;
+  margin-bottom: 0.25em;
 }
 .shots {
-  background-color: black;
-  border: 2px solid white;
-  border-radius: 10px;
-  padding: 0.5em;
 }
 .shots-bullet-icons {
   display: flex;
@@ -81,11 +87,6 @@ i {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-
-  background-color: black;
-  border: 2px solid white;
-  border-radius: 10px;
-  padding: 0.5em;
 }
 .ducks-info__hit {
   margin-right: 2em;
@@ -114,14 +115,31 @@ i {
 }
 
 .score {
-  background-color: black;
-  border: 2px solid white;
-  border-radius: 10px;
-  padding: 0.5em;
 }
 .score-number {
   text-align: center;
 }
 .score-text {
   text-align: center;
+}
+
+[data-card] {
+  display: none;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+[data-show-high-score-card="true"] {
+  display: block;
+}
+[data-show-fly-away-card="true"] {
+  display: block;
+}
+[data-show-lose-card="true"] {
+  display: block;
+}
+[data-show-game-over-card="true"] {
+  display: block;
 }

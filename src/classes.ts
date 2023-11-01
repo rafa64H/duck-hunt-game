@@ -8,6 +8,8 @@ import {
   globalVariables,
   countHuntedDucks,
   increaseScore,
+  showCard,
+  hideCard,
 } from "./main";
 
 const GAME_SPRITES_DOG = new Image();
@@ -379,6 +381,8 @@ export class Duck {
       });
 
       if (!flyingDucks) {
+        hideCard("fly away");
+
         dog.action = "flew away duck";
         dog.declaringPositions();
         currentLevelGreaterThanFour
@@ -415,6 +419,8 @@ export class Duck {
           : globalVariables.ducksToShow.splice(0, 1);
       } else if (flyingDucks) {
       } else {
+        hideCard("fly away");
+
         dog.action = "flew away duck";
         dog.declaringPositions();
         currentLevelGreaterThanFour
@@ -479,6 +485,7 @@ export class Duck {
       }
     }
     if (this.action === "fly away") {
+      showCard("fly away");
       this.removeCollisionDetecion = true;
       this.spriteFrameY = 2;
       this.speedX = 0;

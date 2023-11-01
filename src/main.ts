@@ -3,10 +3,8 @@ import { Collision, Dog, Duck, Shoot } from "./classes";
 const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
 export const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
-export const CANVAS_WIDTH =
-  window.innerWidth < 1024
-    ? (canvas.width = window.innerWidth)
-    : (canvas.width = 1024);
+export const CANVAS_WIDTH = (canvas.width = window.innerWidth);
+
 export const CANVAS_HEIGHT =
   window.innerHeight < 500
     ? (canvas.height = window.innerHeight)
@@ -25,10 +23,58 @@ const shotsBulletIcons = document.querySelector(
 export const scoreElement = document.querySelector("[data-score]");
 
 export const levelElement = document.querySelector("[data-level-element]");
+export const showHighScoreCard = document.querySelector(
+  "[data-show-high-score-card]"
+);
+export const showFlyAwayCard = document.querySelector(
+  "[data-show-fly-away-card]"
+);
+export const showLoseCard = document.querySelector("[data-show-lose-card]");
+export const showGameOverCard = document.querySelector(
+  "[data-show-game-over-card]"
+);
 
 export const requiredDucksBar = document.querySelector(
   "[data-required-ducks-bar]"
 ) as HTMLElement;
+
+export function showCard(
+  card: "high score" | "fly away" | "lose" | "game over"
+): void {
+  switch (card) {
+    case "high score":
+      showHighScoreCard?.setAttribute("data-show-high-score-card", "true");
+      break;
+    case "fly away":
+      showFlyAwayCard?.setAttribute("data-show-fly-away-card", "true");
+      break;
+    case "lose":
+      showLoseCard?.setAttribute("data-show-lose-card", "true");
+      break;
+    case "game over":
+      showGameOverCard?.setAttribute("data-show-game-over-card", "true");
+      break;
+  }
+}
+
+export function hideCard(
+  card: "high score" | "fly away" | "lose" | "game over"
+): void {
+  switch (card) {
+    case "high score":
+      showHighScoreCard?.setAttribute("data-show-high-score-card", "false");
+      break;
+    case "fly away":
+      showFlyAwayCard?.setAttribute("data-show-fly-away-card", "false");
+      break;
+    case "lose":
+      showLoseCard?.setAttribute("data-show-lose-card", "false");
+      break;
+    case "game over":
+      showGameOverCard?.setAttribute("data-show-game-over-card", "false");
+      break;
+  }
+}
 
 export const globalVariables = {
   currentLevel: 5 as number,
@@ -67,7 +113,9 @@ export function countHuntedDucks(): void {
   function playNextAudioAndCount(): void {
     if (huntedDucksIcons.length < 1) {
       audioLose.play();
+      showCard("lose");
       audioLose.onended = (): void => {
+        hideCard("lose");
         setTimeout((): void => {
           gameOver();
         }, 500);
@@ -86,7 +134,9 @@ export function countHuntedDucks(): void {
         if (currentIndex >= huntedDucksIcons.length) {
           if (huntedDucksIcons.length < globalVariables.currentRequiredDucks) {
             audioLose.play();
+            showCard("lose");
             audioLose.onended = (): void => {
+              hideCard("lose");
               setTimeout((): void => {
                 gameOver();
               }, 500);
@@ -94,7 +144,10 @@ export function countHuntedDucks(): void {
           } else if (huntedDucksIcons.length === 10) {
             audioHighScore.play();
             increaseScore(100000);
+            showCard("high score");
+
             audioHighScore.onended = (): void => {
+              hideCard("high score");
               increaseRequiredDucksBar();
               setTimeout((): void => {
                 goToNextLevel();
@@ -128,6 +181,7 @@ export function goToNextLevel(): void {
 }
 
 export function gameOver(): void {
+  showCard("game over");
   dog.action = "game over";
   dog.declaringPositions();
 }
@@ -248,6 +302,8 @@ buttonStartGame.addEventListener("click", (e) => {
 });
 
 canvas.addEventListener("click", (e: MouseEvent) => {
+  const canvasBounds = canvas.getBoundingClientRect();
+
   const unspentBullets = globalVariables.bulletIcons.filter((bulletIcon) => {
     const spent = bulletIcon.getAttribute("data-spent");
     return spent !== "true";
@@ -259,7 +315,7 @@ canvas.addEventListener("click", (e: MouseEvent) => {
 
   unspentBullets[unspentBullets.length - 1].setAttribute("data-spent", "true");
 
-  const shoot = new Shoot(e.offsetX, e.offsetY);
+  const shoot = new Shoot(e.x - canvasBounds.left, e.y - canvasBounds.top);
   const shootSound = new Audio("src/assets/audio/gunshot.mp3");
   shootSound.play();
 

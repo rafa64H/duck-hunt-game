@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -15,8 +15,10 @@
     <div class="background-game-info">
       <div class="game-info" data-display-game-info="false">
         <div class="level-and-shots">
-          <section class="level">R=<span data-level-element></span></section>
-          <section class="shots">
+          <section class="level black-background-and-border">
+            R=<span data-level-element></span>
+          </section>
+          <section class="shots black-background-and-border">
             <div class="shots-bullet-icons" data-shots-bullet-icons>
               <i class="shot-bullet-i" data-spent="false"></i>
               <i class="shot-bullet-i" data-spent="false"></i>
@@ -25,7 +27,7 @@
             <p class="shots__p">SHOT</p>
           </section>
         </div>
-        <section class="ducks-info">
+        <section class="ducks-info black-background-and-border">
           <div class="ducks-info__hit">
             <p>HIT</p>
           </div>
@@ -45,10 +47,42 @@
             <div class="required-ducks" data-required-ducks-bar></div>
           </div>
         </section>
-        <section class="score">
+        <section class="score black-background-and-border">
           <p class="score-number" data-score></p>
           <p class="score-text">SCORE</p>
         </section>
+
+        <div
+          class="black-background-and-border"
+          data-card
+          data-show-high-score-card="false"
+        >
+          High score
+        </div>
+
+        <div
+          class="black-background-and-border"
+          data-card
+          data-show-fly-away-card="false"
+        >
+          Fly away
+        </div>
+
+        <div
+          class="black-background-and-border"
+          data-card
+          data-show-lose-card="false"
+        >
+          You lose
+        </div>
+
+        <div
+          class="black-background-and-border"
+          data-card
+          data-show-game-over-card="false"
+        >
+          Game over
+        </div>
       </div>
     </div>
 
