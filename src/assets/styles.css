@@ -12,7 +12,9 @@
 }
 
 canvas {
-  cursor: url("./aim-cursor.svg"), pointer;
+  cursor:
+    url("./aim-cursor.svg") 25 25,
+    pointer;
 }
 
 i {
