@@ -38,7 +38,8 @@ export class Dog {
     | "starting game"
     | "hunted duck"
     | "flew away duck"
-    | "starting next level";
+    | "starting next level"
+    | "game over";
 
   constructor() {
     this.action = "";
@@ -100,7 +101,7 @@ export class Dog {
       this.spriteHeight = 54;
       this.audio.src = "src/assets/audio/duck-caught.mp3";
     }
-    if (this.action === "flew away duck") {
+    if (this.action === "flew away duck" || this.action === "game over") {
       this.counterAnimation = 0;
       this.x = CANVAS_WIDTH * 0.5;
       this.y = CANVAS_HEIGHT - this.height;
@@ -111,7 +112,10 @@ export class Dog {
       this.spriteFrameY = 1;
       this.spriteWidth = 62.5;
       this.spriteHeight = 54;
-      this.audio.src = "src/assets/audio/dog-laughing.mp3";
+      if (this.action === "flew away duck")
+        this.audio.src = "src/assets/audio/dog-laughing.mp3";
+      if (this.action === "game over")
+        this.audio.src = "src/assets/audio/lose-2.mp3";
     }
   }
 
@@ -201,6 +205,14 @@ export class Dog {
         }
         this.counterAnimation++;
       }
+      if (this.action === "game over") {
+        if (this.audio.currentTime < this.audio.duration) this.audio.play();
+        this.spriteFrameX === 4 ? (this.spriteFrameX = 3) : this.spriteFrameX++;
+        this.speedY = -15;
+        if (this.y <= CANVAS_HEIGHT - 165 && this.counterAnimation < 10) {
+          this.speedY = 0;
+        }
+      }
       this.x += this.speedX;
       this.y += this.speedY;
     }
@@ -233,7 +245,11 @@ export class Dog {
       }
     }
 
-    if (this.action === "hunted duck" || this.action === "flew away duck") {
+    if (
+      this.action === "hunted duck" ||
+      this.action === "flew away duck" ||
+      this.action === "game over"
+    ) {
       ctx.drawImage(
         GAME_SPRITES_DOG,
         this.spriteWidth * this.spriteFrameX,
@@ -291,8 +307,8 @@ export class Duck {
       this.color === "blue" ? 0 : this.color === "black" ? 3 : 6;
 
     this.spriteFrameY = 0;
-    this.speedXOnLevel = level;
-    this.speedYOnLevel = level;
+    this.speedXOnLevel = level >= 12 ? 12 : level + 1;
+    this.speedYOnLevel = level >= 12 ? 12 : level + 1;
     this.speedX = this.speedXOnLevel;
     this.speedY = this.speedYOnLevel;
     this.animationSpeed = 4;

@@ -31,7 +31,7 @@ export const requiredDucksBar = document.querySelector(
 ) as HTMLElement;
 
 export const globalVariables = {
-  currentLevel: 15 as number,
+  currentLevel: 5 as number,
   currentRequiredDucks: 4 as number,
   duckIcons: [...duckIconsElements.children] as HTMLElement[],
   bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
@@ -65,6 +65,15 @@ export function countHuntedDucks(): void {
   let currentIndex = 0;
 
   function playNextAudioAndCount(): void {
+    if (huntedDucksIcons.length < 1) {
+      audioLose.play();
+      audioLose.onended = (): void => {
+        setTimeout((): void => {
+          gameOver();
+        }, 500);
+      };
+    }
+
     if (currentIndex < huntedDucksIcons.length) {
       const duckIcon = huntedDucksIcons[currentIndex];
       duckIcon.setAttribute("data-counting", "true");
@@ -77,6 +86,11 @@ export function countHuntedDucks(): void {
         if (currentIndex >= huntedDucksIcons.length) {
           if (huntedDucksIcons.length < globalVariables.currentRequiredDucks) {
             audioLose.play();
+            audioLose.onended = (): void => {
+              setTimeout((): void => {
+                gameOver();
+              }, 500);
+            };
           } else if (huntedDucksIcons.length === 10) {
             audioHighScore.play();
             increaseScore(100000);
@@ -110,6 +124,11 @@ export function goToNextLevel(): void {
   restoreDuckIcons();
 
   dog.action = "starting next level";
+  dog.declaringPositions();
+}
+
+export function gameOver(): void {
+  dog.action = "game over";
   dog.declaringPositions();
 }
 
