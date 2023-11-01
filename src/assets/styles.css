@@ -11,6 +11,10 @@
   box-sizing: border-box;
 }
 
+canvas {
+  cursor: url("./aim-cursor.svg"), pointer;
+}
+
 i {
   display: inline-block;
 
