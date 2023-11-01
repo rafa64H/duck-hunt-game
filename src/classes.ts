@@ -78,9 +78,14 @@ export class Dog {
       this.y = CANVAS_HEIGHT - this.height;
       this.speedX = 0;
       this.speedY = 0;
+      this.spriteFrameX = 0;
+      this.spriteFrameY = 0;
       this.spriteWidth = 60;
       this.spriteHeight = 54;
-      this.audio.src = "src/assets/audio/starting-game.mp3";
+      if (this.action === "starting game")
+        this.audio.src = "src/assets/audio/starting-game.mp3";
+      if (this.action === "starting next level")
+        this.audio.src = "src/assets/audio/next-round.mp3";
     }
     if (this.action === "hunted duck") {
       this.counterAnimation = 0;

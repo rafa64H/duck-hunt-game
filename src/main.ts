@@ -31,7 +31,7 @@ export const requiredDucksBar = document.querySelector(
 ) as HTMLElement;
 
 export const globalVariables = {
-  currentLevel: 1 as number,
+  currentLevel: 5 as number,
   currentRequiredDucks: 4 as number,
   duckIcons: [...duckIconsElements.children] as HTMLElement[],
   bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
