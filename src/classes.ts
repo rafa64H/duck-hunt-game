@@ -7,6 +7,7 @@ import {
   dog,
   globalVariables,
   countHuntedDucks,
+  increaseScore,
 } from "./main";
 
 const GAME_SPRITES_DOG = new Image();
@@ -369,6 +370,8 @@ export class Duck {
           : globalVariables.ducksToShow.splice(0, 1);
       }
     } else {
+      increaseScore(1000);
+
       const numberOfDucksInLevel = currentLevelGreaterThanFour ? 2 : 1;
 
       const notHuntedDuckIcons = globalVariables.duckIcons.filter(

@@ -79,10 +79,16 @@ export function countHuntedDucks(): void {
             audioLose.play();
           } else if (huntedDucksIcons.length === 10) {
             audioHighScore.play();
+            increaseScore(100000);
             audioHighScore.onended = (): void => {
-              goToNextLevel();
+              increaseRequiredDucksBar();
+              setTimeout((): void => {
+                goToNextLevel();
+              }, 1000);
             };
           } else {
+            increaseRequiredDucksBar();
+
             setTimeout((): void => {
               goToNextLevel();
             }, 1000);
@@ -96,11 +102,7 @@ export function countHuntedDucks(): void {
 
 export function goToNextLevel(): void {
   globalVariables.currentLevel++;
-  globalVariables.currentRequiredDucks++;
 
-  requiredDucksBar.style.width = `${
-    globalVariables.currentRequiredDucks * 10
-  }%`;
   levelElement!.textContent = globalVariables.currentLevel.toString();
 
   createDucksInTheLevel();
@@ -126,6 +128,25 @@ export function restoreDuckIcons(): void {
   globalVariables.duckIcons.forEach((duckIcon) => {
     duckIcon.setAttribute("data-hunted", "false");
   });
+}
+
+export function increaseRequiredDucksBar(): void {
+  const audioDuckDrop = new Audio();
+  audioDuckDrop.src = "src/assets/audio/duck-drop.mp3";
+
+  if (globalVariables.currentRequiredDucks < 8) {
+    audioDuckDrop.play();
+    globalVariables.currentRequiredDucks++;
+  }
+
+  requiredDucksBar.style.width = `${
+    globalVariables.currentRequiredDucks * 10
+  }%`;
+}
+
+export function increaseScore(value: number): void {
+  globalVariables.currentScore += value;
+  scoreElement!.textContent = globalVariables.currentScore.toString();
 }
 
 export function restoreAmmo(): void {
