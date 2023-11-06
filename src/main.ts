@@ -77,7 +77,7 @@ export function hideCard(
 }
 
 export const globalVariables = {
-  currentLevel: 5 as number,
+  currentLevel: 1 as number,
   currentRequiredDucks: 4 as number,
   duckIcons: [...duckIconsElements.children] as HTMLElement[],
   bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
@@ -309,7 +309,12 @@ canvas.addEventListener("click", (e: MouseEvent) => {
     return spent !== "true";
   });
 
-  if (dog.action === "starting game" || unspentBullets.length === 0) {
+  if (
+    dog.action === "starting game" ||
+    dog.action === "hunted duck" ||
+    dog.action === "starting next level" ||
+    unspentBullets.length === 0
+  ) {
     return;
   }
 

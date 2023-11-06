@@ -290,6 +290,7 @@ export class Duck {
   public frames: number;
   public counterAnimation: number;
   public audio: HTMLAudioElement;
+  public initialTime: number;
 
   constructor(
     public color: string,
@@ -317,6 +318,7 @@ export class Duck {
     this.frames = 0;
     this.counterAnimation = 0;
     this.audio = new Audio("src/assets/audio/duck-flapping.mp3");
+    this.initialTime = 0;
   }
 
   changeAudio(): void {
@@ -329,6 +331,8 @@ export class Duck {
   }
 
   declaringPositions(): void {
+    this.initialTime = Date.now();
+
     const randomX = Math.round(
       Math.random() * CANVAS_WIDTH - this.width - 0 + this.width
     );
@@ -437,6 +441,15 @@ export class Duck {
         this.audio.currentTime = 0;
       }
       this.audio.play();
+
+      const currentTime = Date.now() - this.initialTime;
+
+      const currentSeconds = currentTime / 1000;
+
+      console.log(currentSeconds);
+      if (currentSeconds >= 5) {
+        this.action = "fly away";
+      }
 
       if (this.frames % this.animationSpeed === 0) {
         if (this.counterAnimation >= 70) {
