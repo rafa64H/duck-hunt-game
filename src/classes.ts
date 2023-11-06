@@ -333,10 +333,10 @@ export class Duck {
   declaringPositions(): void {
     this.initialTime = Date.now();
 
-    const randomX = Math.round(
+    const randomX: number = Math.round(
       Math.random() * CANVAS_WIDTH - this.width - 0 + this.width
     );
-    const randomY = Math.round(
+    const randomY: number = Math.round(
       Math.random() * (CANVAS_HEIGHT - 150) - 0 + this.height
     );
     this.x = randomX;
@@ -352,9 +352,9 @@ export class Duck {
   }
 
   changeDirection(): void {
-    const negativeOrPositiveX =
+    const negativeOrPositiveX: boolean =
       Math.round(Math.random() * 10) >= 5 ? true : false;
-    const negativeOrPositiveY =
+    const negativeOrPositiveY: boolean =
       Math.round(Math.random() * 10) >= 5 ? true : false;
 
     if (negativeOrPositiveX) {
@@ -377,10 +377,10 @@ export class Duck {
   }
 
   delete(typeOfDelete: "flew away" | "hunted"): void {
-    const currentLevelGreaterThanFour = this.level > 4 ? true : false;
+    const currentLevelGreaterThanFour: boolean = this.level > 4 ? true : false;
 
     if (typeOfDelete === "flew away") {
-      const flyingDucks = globalVariables.ducksToShow.some((duck) => {
+      const flyingDucks: boolean = globalVariables.ducksToShow.some((duck) => {
         return duck.action !== "hunted" && duck.action !== "flew away";
       });
 
@@ -396,22 +396,21 @@ export class Duck {
     } else {
       increaseScore(1000);
 
-      const numberOfDucksInLevel = currentLevelGreaterThanFour ? 2 : 1;
+      const numberOfDucksInLevel: 2 | 1 = currentLevelGreaterThanFour ? 2 : 1;
 
-      const notHuntedDuckIcons = globalVariables.duckIcons.filter(
-        (duckIcon) => {
+      const notHuntedDuckIcons: HTMLElement[] =
+        globalVariables.duckIcons.filter((duckIcon) => {
           const huntedDuckAttribute = duckIcon.getAttribute("data-hunted");
           return huntedDuckAttribute !== "true";
-        }
-      );
+        });
 
       notHuntedDuckIcons[0].setAttribute("data-hunted", "true");
 
-      const huntedDucks = globalVariables.ducksToShow.filter((duck) => {
+      const huntedDucks: Duck[] = globalVariables.ducksToShow.filter((duck) => {
         return duck.action === "hunted";
       });
 
-      const flyingDucks = globalVariables.ducksToShow.some((duck) => {
+      const flyingDucks: boolean = globalVariables.ducksToShow.some((duck) => {
         return duck.action !== "hunted" && duck.action !== "flew away";
       });
 
@@ -442,9 +441,9 @@ export class Duck {
       }
       this.audio.play();
 
-      const currentTime = Date.now() - this.initialTime;
+      const currentTime: number = Date.now() - this.initialTime;
 
-      const currentSeconds = currentTime / 1000;
+      const currentSeconds: number = currentTime / 1000;
 
       console.log(currentSeconds);
       if (currentSeconds >= 5) {
@@ -585,15 +584,17 @@ export class Shoot {
   }
 
   delete() {
-    const indexOfThis = globalVariables.shootArr.indexOf(this);
+    const indexOfThis: number = globalVariables.shootArr.indexOf(this);
     globalVariables.shootArr.splice(indexOfThis, 1);
 
-    const unspentBullets = globalVariables.bulletIcons.filter((bulletIcon) => {
-      const spent = bulletIcon.getAttribute("data-spent");
-      return spent !== "true";
-    });
+    const unspentBullets: HTMLElement[] = globalVariables.bulletIcons.filter(
+      (bulletIcon) => {
+        const spent = bulletIcon.getAttribute("data-spent");
+        return spent !== "true";
+      }
+    );
 
-    const aliveDucks = globalVariables.ducksToShow.filter((duck) => {
+    const aliveDucks: Duck[] = globalVariables.ducksToShow.filter((duck) => {
       return duck.action === "flying";
     });
 
@@ -623,10 +624,10 @@ export class Shoot {
 export class Collision {
   collisionDucks(): void {
     globalVariables.ducksToShow.forEach((duck) => {
-      const borderTop = 0;
-      const borderRight = CANVAS_WIDTH - duck.width;
-      const borderBottom = CANVAS_HEIGHT - duck.height - 100;
-      const borderLeft = 0;
+      const borderTop: number = 0;
+      const borderRight: number = CANVAS_WIDTH - duck.width;
+      const borderBottom: number = CANVAS_HEIGHT - duck.height - 100;
+      const borderLeft: number = 0;
 
       if (duck.removeCollisionDetecion) return;
       if (duck.x <= borderLeft) {

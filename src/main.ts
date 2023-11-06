@@ -3,9 +3,9 @@ import { Collision, Dog, Duck, Shoot } from "./classes";
 const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
 export const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
-export const CANVAS_WIDTH = (canvas.width = window.innerWidth);
+export const CANVAS_WIDTH: number = (canvas.width = window.innerWidth);
 
-export const CANVAS_HEIGHT =
+export const CANVAS_HEIGHT: number =
   window.innerHeight < 500
     ? (canvas.height = window.innerHeight)
     : (canvas.height = 500);
@@ -20,23 +20,29 @@ const shotsBulletIcons = document.querySelector(
   "[data-shots-bullet-icons]"
 ) as HTMLDivElement;
 
-export const scoreElement = document.querySelector("[data-score]");
+export const scoreElement = document.querySelector(
+  "[data-score]"
+) as HTMLParagraphElement;
 
-export const levelElement = document.querySelector("[data-level-element]");
+export const levelElement = document.querySelector(
+  "[data-level-element]"
+) as HTMLSpanElement;
 export const showHighScoreCard = document.querySelector(
   "[data-show-high-score-card]"
-);
+) as HTMLDivElement;
 export const showFlyAwayCard = document.querySelector(
   "[data-show-fly-away-card]"
 );
-export const showLoseCard = document.querySelector("[data-show-lose-card]");
+export const showLoseCard = document.querySelector(
+  "[data-show-lose-card]"
+) as HTMLDivElement;
 export const showGameOverCard = document.querySelector(
   "[data-show-game-over-card]"
-);
+) as HTMLDivElement;
 
 export const requiredDucksBar = document.querySelector(
   "[data-required-ducks-bar]"
-) as HTMLElement;
+) as HTMLDivElement;
 
 export const globalVariables = {
   currentLevel: 1 as number,
@@ -188,8 +194,8 @@ export function gameOver(): void {
 
 export function createDucksInTheLevel(): void {
   for (let i = 0; i < 10; i++) {
-    const numberForColor = Math.round(Math.random() * 2);
-    const colorNewDuck = POSIBLE_DUCK_COLORS[numberForColor];
+    const numberForColor: number = Math.round(Math.random() * 2);
+    const colorNewDuck: string = POSIBLE_DUCK_COLORS[numberForColor];
 
     const newDuck = new Duck(colorNewDuck, globalVariables.currentLevel);
     newDuck.declaringPositions();
