@@ -36,7 +36,7 @@ i {
 
   margin-top: -0.54em;
   padding: 0.5em 1em;
-  width: min(100%, 1024px);
+  width: 100%;
   background-color: brown;
 }
 

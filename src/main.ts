@@ -38,6 +38,18 @@ export const requiredDucksBar = document.querySelector(
   "[data-required-ducks-bar]"
 ) as HTMLElement;
 
+export const globalVariables = {
+  currentLevel: 1 as number,
+  currentRequiredDucks: 4 as number,
+  duckIcons: [...duckIconsElements.children] as HTMLElement[],
+  bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
+  currentScore: 0 as number,
+  levelsLeft: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as number[],
+  ducksInTheLevel: [] as Duck[],
+  ducksToShow: [] as Duck[],
+  shootArr: [] as Shoot[],
+};
+
 export function showCard(
   card: "high score" | "fly away" | "lose" | "game over"
 ): void {
@@ -75,18 +87,6 @@ export function hideCard(
       break;
   }
 }
-
-export const globalVariables = {
-  currentLevel: 1 as number,
-  currentRequiredDucks: 4 as number,
-  duckIcons: [...duckIconsElements.children] as HTMLElement[],
-  bulletIcons: [...shotsBulletIcons.children] as HTMLElement[],
-  currentScore: 0 as number,
-  levelsLeft: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as number[],
-  ducksInTheLevel: [] as Duck[],
-  ducksToShow: [] as Duck[],
-  shootArr: [] as Shoot[],
-};
 
 levelElement!.textContent = globalVariables.currentLevel.toString();
 scoreElement!.textContent = globalVariables.currentScore.toString();
