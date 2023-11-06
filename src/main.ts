@@ -302,7 +302,7 @@ const buttonStartGame = document.querySelector(
   "#start-game-btn"
 ) as HTMLButtonElement;
 
-buttonStartGame.addEventListener("click", (e) => {
+buttonStartGame.addEventListener("click", () => {
   startGame();
   buttonStartGame.remove();
 });
